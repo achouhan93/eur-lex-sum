@@ -1,0 +1,58 @@
+{
+    "properties": {
+      "english": {
+        "type": "nested",
+        "properties": {
+          "documentInformation": {
+            "type": "nested",
+            "properties": {
+              "rawDocument": {
+                "type": "keyword"
+              },
+              "documentContent": {
+                "type": "keyword"
+              }
+            }
+          },
+          "summaryInformation": {
+            "type": "nested",
+            "properties": {
+              "rawSummary": {
+                "type": "keyword"
+              },
+              "summaryContent": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "german": {
+        "type": "nested",
+        "properties": {
+          "documentInformation": {
+            "type": "nested",
+            "properties": {
+              "rawDocument": {
+                "type": "keyword"
+              },
+              "documentContent": {
+                "type": "keyword"
+              }
+            }
+          },
+          "summaryInformation": {
+            "type": "nested",
+            "properties": {
+              "rawSummary": {
+                "type": "keyword"
+              },
+              "summaryContent": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      }
+    }
+  }

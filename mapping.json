@@ -1,0 +1,30 @@
+{ 
+    "english":
+    { 
+        "documentInformation":
+            {
+                "rawDocument":"XYZ",
+                "documentContent":"XYZ"
+            },
+
+        "summaryInformation":
+            {
+                "rawSummary":"XYZ",
+                "summaryContent":"XYZ"
+            }
+    },
+    "german":
+    { 
+        "documentInformation":
+            {
+                "rawDocument":"XYZ",
+                "documentContent":"XYZ"
+            },
+
+        "summaryInformation":
+            {
+                "rawSummary":"XYZ",
+                "summaryContent":"XYZ"
+            }
+    }
+}
