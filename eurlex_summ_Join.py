@@ -227,33 +227,24 @@ if __name__ == '__main__':
     document_combined_information = pd.DataFrame(data=None)
 
     start_time = time()
-    logging.info("Current date and time: " + str(start_time))
+    logging.info("Current date and time for Joining Script: " + str(start_time))
 
     # Elastic Search Index
     index_name_join = 'eur-lex-data'
     index_name_document = 'achouhan'
     index_name_summary = 'eur-lex-sum'
 
-    while True:  
-        # Instance of Elastic Search
-        server = input('Server of the Elastic Search Index (localhost or Uniheidelberg): ')
-        if server.lower() == "localhost":
-            es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-            break
-        elif server.lower() == "uniheidelberg":
-            user_name = input('University Heidelberg Elastic Search Username: ')
-            password = input('University Heidelberg Elastic Search Password: ')
-            es = OpenSearch(hosts = [{'host': 'elastic-dbs.ifi.uni-heidelberg.de', 'port': 443}], 
-            http_auth =(user_name, password), 
-            use_ssl = True,
-            verify_certs = True,
-            ssl_assert_hostname = False,
-            ssl_show_warn = False
-            )
-            break
-        else:
-            continue
-    
+    # Instance of Elastic Search
+    user_name = os.environ.get('UNI_USER')
+    password = os.environ.get('UNI_PWD')
+    es = OpenSearch(hosts = [{'host': 'elastic-dbs.ifi.uni-heidelberg.de', 'port': 443}], 
+    http_auth =(user_name, password), 
+    use_ssl = True,
+    verify_certs = True,
+    ssl_assert_hostname = False,
+    ssl_show_warn = False
+    )
+        
     # Calling the Function for the given CELEX_Numbers
     document_information = extract_document_information(es, index_name_document)
     document_summary_information = elastic_document_summary_information(es, index_name_summary)
@@ -268,5 +259,5 @@ if __name__ == '__main__':
     elastic_search_insert(es, index_name_join, document_combined_information)
 
     end_time = time()
-    logging.info("Current date and time: " + str(end_time))
-    logging.info("Time for Execution of Script: " + str(start_time - end_time))
+    logging.info("Current date and time for Joining Script: " + str(end_time))
+    logging.info("Time for Execution of Script of Joining Script: " + str(start_time - end_time))
