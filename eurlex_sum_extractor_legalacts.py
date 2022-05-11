@@ -1021,12 +1021,10 @@ if __name__ == '__main__':
     # For logging the progress of the script and the list of Celex Numbers extracted
     #####################################################################################################
     working_dir = os.getcwd()   
-    directory = os.path.join(working_dir, 'Scrapped_Data_Information_1')
+    directory = os.path.join(working_dir, 'Scrapped_Data_Information')
 
     if not os.path.exists(directory):
         os.makedirs(directory)
-
-    filename_celex = os.path.join(directory, 'Celex_Numbers.csv')
 
     # Preparing a File to Log the Metadata Informaiton
     extraction_logs = os.path.join(directory, 'Logs_Extracting_MetaData.log')
