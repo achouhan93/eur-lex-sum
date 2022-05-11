@@ -1,193 +1,193 @@
 { 
     "bulgarian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "spanish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "czech":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "danish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "german":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "estonian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "greek":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "english":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "french":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "irish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "croatian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "italian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "latvian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "lithuanian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "hungarian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "maltese":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "dutch":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "polish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "portuguese":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "romanian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "slovak":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "slovenian":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "finnish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     },
     "swedish":
     { 
-        "summaryInformation":
+        "documentInformation":
             {
-                "rawSummary":"XYZ",
+                "documentContent":"XYZ",
                 "summaryContent":"XYZ"
             }
     }
