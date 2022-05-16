@@ -52,7 +52,7 @@ def pages_extraction(provided_url):
         integer: Value of the number of pages present in the provided URL
     """
     input_url = urllib.request.urlopen(provided_url)
-    input_soup = BeautifulSoup(input_url , 'lxml')
+    input_soup = BeautifulSoup(input_url , 'html.parser')
     page_number_indexes = input_soup.find_all('a', class_ = 'btn btn-primary btn-sm')
     last_page_number_url = page_number_indexes[1].attrs['href']
     last_page_number = int((re.search('page=(\d+)', last_page_number_url , re.IGNORECASE)).group(1)) + 1
