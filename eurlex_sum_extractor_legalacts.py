@@ -145,7 +145,7 @@ def get_document_summary(lang, celex_id):
         dictionary: Summary content of the document in the provided language
     """
     summary_dict = {} 
-    
+    sleep(1)
     # Preparing URL for the summary of the Celex number
     document_url = f'https://eur-lex.europa.eu/legal-content/{lang}/LSU/?uri=CELEX:{celex_id}'
     document_request = requests.get(document_url)
@@ -233,6 +233,7 @@ def get_file_by_id(lang, celex_id):
         dict['documentContent'] = "NA"
     
     logging.info(track_dict)
+    sleep(1)
 
     return dict
 
