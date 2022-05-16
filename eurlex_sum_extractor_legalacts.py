@@ -141,8 +141,7 @@ def get_document_summary(lang, celex_id):
     Returns:
         dictionary: Summary content of the document in the provided language
     """
-    summary_dict = {}
-    sleep(1) 
+    summary_dict = {} 
     
     # Preparing URL for the summary of the Celex number
     document_url = f'https://eur-lex.europa.eu/legal-content/{lang}/LSU/?uri=CELEX:{celex_id}'
@@ -231,7 +230,6 @@ def get_file_by_id(lang, celex_id):
         dict['documentContent'] = "NA"
     
     logging.info(track_dict)
-    sleep(1)
 
     return dict
 
@@ -973,17 +971,10 @@ def elastic_search_insert(es_index, index_name, celex_information):
         }
     _id = celex_information['_id']
     
-    retries = 0
-    while True:
-        try:
-            es_index.index(index=index_name,body=doc,id=_id)
-            break
-        except Exception as e:
-            if retries == 5:
-                print('Indexing user \'{}\' failed for 5 consecutiv times. Aborting!'.format(_id))
-                break
-            retries += 1
-            sleep(retries * 5)
+    try:
+        es_index.index(index=index_name,body=doc,id=_id)
+    except Exception as e:
+        logging.error('Indexing celex id \'{}\' failed to push in OpenSearch'.format(_id))
 
 
 # In[11]:
@@ -1063,12 +1054,14 @@ if __name__ == '__main__':
 
         provided_url = 'https://eur-lex.europa.eu/search.html?name=browse-by%3Alegislation-in-force&type=named&displayProfile=allRelAllConsDocProfile&qid=1651004540876&CC_1_CODED=' + domain
 
-        # Calling the Function for the given CELEX_Numbers
-        list_celex_number = celex_main(provided_url)
-        non_existing_celex_number = elastic_search_existing_check(es, index_name, list_celex_number)
+        for year in range(2022, 2013, -1):
+            provided_url_year = provided_url + '&DD_YEAR=' + str(year)
+            # Calling the Function for the given CELEX_Numbers
+            list_celex_number = celex_main(provided_url_year)
+            non_existing_celex_number = elastic_search_existing_check(es, index_name, list_celex_number)
 
-        # Calling the Function to extract the metadata for the list of celex numbers
-        get_document_information(es, index_name, non_existing_celex_number)
+            # Calling the Function to extract the metadata for the list of celex numbers
+            get_document_information(es, index_name, non_existing_celex_number)
 
     end_time = time()
     logging.info("Current date and time: " + str(end_time))
