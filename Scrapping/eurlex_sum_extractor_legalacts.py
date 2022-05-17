@@ -1025,7 +1025,7 @@ if __name__ == '__main__':
     extraction_logs = os.path.join(directory, 'Logs_Extracting_MetaData.log')
     
     # Configuring the File name to logging Level
-    logging.basicConfig(filename=extraction_logs,level=logging.INFO)
+    logging.basicConfig(filename=extraction_logs,format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%d-%b-%y %H:%M:%S')
 
     list_celex_number = pd.DataFrame(data=None)
 
