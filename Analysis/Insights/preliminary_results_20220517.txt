@@ -1,0 +1,45 @@
+spanish & 141 \\
+german & 141 \\
+english & 141 \\
+french & 141 \\
+italian & 136 \\
+danish & 135 \\
+dutch & 135 \\
+portuguese & 135 \\
+finnish & 135 \\
+swedish & 135 \\
+bulgarian & 134 \\
+czech & 134 \\
+estonian & 134 \\
+greek & 134 \\
+latvian & 134 \\
+lithuanian & 134 \\
+hungarian & 134 \\
+polish & 134 \\
+romanian & 134 \\
+slovak & 134 \\
+slovenian & 134 \\
+maltese & 133 \\
+croatian & 132 \\
+irish & 62 \\
+#######################################
+Stats for german:
+Mean reference length: 10885.47 +/- 17356.22
+Median reference length: 5486.00
+Mean summary length: 1044.07 +/- 433.56
+Median summary length: 954.00
+Mean compression ratio: 11.341052655957915
+#######################################
+Stats for english:
+Mean reference length: 14000.38 +/- 29563.44
+Median reference length: 6050.00
+Mean summary length: 1413.32 +/- 639.06
+Median summary length: 1314.00
+Mean compression ratio: 13.290963871889085
+#######################################
+Stats for french:
+Mean reference length: 14916.33 +/- 31480.14
+Median reference length: 6264.00
+Mean summary length: 1207.29 +/- 505.81
+Median summary length: 1127.00
+Mean compression ratio: 14.963692205994159
