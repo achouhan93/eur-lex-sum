@@ -1049,18 +1049,18 @@ if __name__ == '__main__':
     elastic_search_create(es, index_name, es_index_mapping)
     
     # URL of the Domain specific Legal Acts, for example: Energy, Agriculture, Taxation, and other
-    for domain_no in range(1, 21):
-        if domain_no < 10:
-            domain = '0' + str(domain_no)
-        else:
-            domain = str(domain_no)
-        
-        print(f'Domain => {domain_no}')
-        provided_url = 'https://eur-lex.europa.eu/search.html?name=browse-by%3Alegislation-in-force&type=named&displayProfile=allRelAllConsDocProfile&qid=1651004540876&CC_1_CODED=' + domain
+    for year in range(2022, 1950, -1):
+        print('################')
+        print(f'Year => {year}')
+        for domain_no in range(1, 21):
+            if domain_no < 10:
+                domain = '0' + str(domain_no)
+            else:
+                domain = str(domain_no)
+            
+            print(f'Domain => {domain_no}')
+            provided_url = 'https://eur-lex.europa.eu/search.html?name=browse-by%3Alegislation-in-force&type=named&displayProfile=allRelAllConsDocProfile&qid=1651004540876&CC_1_CODED=' + domain
 
-        for year in range(2022, 2013, -1):
-            print('################')
-            print(f'Year => {year}')
             provided_url_year = provided_url + '&DD_YEAR=' + str(year)
             # Calling the Function for the given CELEX_Numbers
             list_celex_number = celex_main(provided_url_year)
