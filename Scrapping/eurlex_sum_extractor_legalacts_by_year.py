@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup
 
 # For Uni Heidelberg Server
 from opensearchpy import OpenSearch
-
+from tqdm import tqdm
 
 # ### Celex Number Extraction
 
@@ -145,7 +145,7 @@ def get_document_summary(lang, celex_id):
         dictionary: Summary content of the document in the provided language
     """
     summary_dict = {} 
-    sleep(1)
+
     # Preparing URL for the summary of the Celex number
     document_url = f'https://eur-lex.europa.eu/legal-content/{lang}/LSU/?uri=CELEX:{celex_id}'
     document_request = requests.get(document_url)
@@ -233,7 +233,6 @@ def get_file_by_id(lang, celex_id):
         dict['documentContent'] = "NA"
     
     logging.info(track_dict)
-    sleep(1)
 
     return dict
 
@@ -258,7 +257,7 @@ def get_document_information(es, index_name, celex_list):
     logging.info("Execution of Extraction of Summary for respective Celex Document - Started")
 
     # For Each CELEX_Number preparing the URL and extracting Info from Website
-    for celex_id in celex_list:
+    for celex_id in tqdm(celex_list):
         celex_document_information = {}
         celex_document_information['_id'] = celex_id
         
@@ -1025,7 +1024,7 @@ if __name__ == '__main__':
     extraction_logs = os.path.join(directory, 'Logs_Extracting_MetaData.log')
     
     # Configuring the File name to logging Level
-    logging.basicConfig(filename=extraction_logs,level=logging.INFO)
+    logging.basicConfig(filename=extraction_logs,format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%d-%b-%y %H:%M:%S')
 
     list_celex_number = pd.DataFrame(data=None)
 
@@ -1050,15 +1049,18 @@ if __name__ == '__main__':
     elastic_search_create(es, index_name, es_index_mapping)
     
     # URL of the Domain specific Legal Acts, for example: Energy, Agriculture, Taxation, and other
-    for domain_no in range(1, 21):
-        if domain_no < 10:
-            domain = '0' + str(domain_no)
-        else:
-            domain = str(domain_no)
+    for year in range(2022, 1950, -1):
+        print('################')
+        print(f'Year => {year}')
+        for domain_no in range(1, 21):
+            if domain_no < 10:
+                domain = '0' + str(domain_no)
+            else:
+                domain = str(domain_no)
+            
+            print(f'Domain => {domain_no}')
+            provided_url = 'https://eur-lex.europa.eu/search.html?name=browse-by%3Alegislation-in-force&type=named&displayProfile=allRelAllConsDocProfile&qid=1651004540876&CC_1_CODED=' + domain
 
-        provided_url = 'https://eur-lex.europa.eu/search.html?name=browse-by%3Alegislation-in-force&type=named&displayProfile=allRelAllConsDocProfile&qid=1651004540876&CC_1_CODED=' + domain
-
-        for year in range(2022, 2013, -1):
             provided_url_year = provided_url + '&DD_YEAR=' + str(year)
             # Calling the Function for the given CELEX_Numbers
             list_celex_number = celex_main(provided_url_year)
