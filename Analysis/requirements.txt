@@ -1,2 +1,4 @@
 opensearch-py
 tqdm
+matplotlib
+numpy

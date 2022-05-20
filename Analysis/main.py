@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Union, Tuple, Optional
 from collections import Counter, defaultdict
 from datetime import datetime
 import regex
@@ -6,6 +6,8 @@ import regex
 import numpy as np
 from tqdm import tqdm
 from opensearchpy import OpenSearch
+import matplotlib
+import matplotlib.pyplot as plt
 
 from config import USER, PASSWORD
 
@@ -58,12 +60,7 @@ def clean_text(text: str) -> str:
     Internally converts the text to a simple paragraph estimate, and re-joins it after simple cleaning operations.
     """
 
-    # Replace misplaced utf8 chars
-    text = text.replace(u"\xa0", u" ")
-
-    # Use two or more consecutive newlines as a preliminary split decision
-    text = regex.sub(r"\n{2,}", r"[SPLIT]", text)
-    split_text = text.split("[SPLIT")
+    split_text = get_split_text(text)
 
     # Remove empty lines and the XML identifier in some first line
     split_text = [line.strip() for line in split_text if line.strip() and not line.endswith(".xml")]
@@ -84,14 +81,119 @@ def clean_text(text: str) -> str:
     return text
 
 
-def compute_whitespace_split_length(text: str):
+def get_split_text(text: str) -> List[str]:
+    """
+    Utility function to generate pseudo-paragraph splitting
+    """
+    # Replace misplaced utf8 chars
+    text = text.replace(u"\xa0", u" ")
+
+    # Use two or more consecutive newlines as a preliminary split decision
+    text = regex.sub(r"\n{2,}", r"[SPLIT]", text)
+    split_text = text.split("[SPLIT]")
+    return split_text
+
+
+def compute_whitespace_split_length(text: str) -> int:
     return len(text.split(" "))
 
 
+def print_language_stats(language: str,
+                         reference_lengths: Dict[str, List[int]],
+                         summary_lengths: Dict[str, List[int]],
+                         compression_ratios: Dict[str, List[str]]) -> None:
+    print(f"#######################################\n"
+          f"Stats for {language}:")
+    print(f"Mean reference length: {np.mean(reference_lengths[language]):.2f} "
+          f"+/- {np.std(reference_lengths[language]):.2f}")
+    print(f"Median reference length: {np.median(reference_lengths[language]):.2f}\n")
+
+    print(f"Mean summary length: {np.mean(summary_lengths[language]):.2f} "
+          f"+/- {np.std(summary_lengths[language]):.2f}")
+    print(f"Median summary length: {np.median(summary_lengths[language]):.2f}\n")
+
+    print(f"Mean compression ratio: {np.mean(compression_ratios[language])}\n\n")
+
+
+def histogram_plot(lengths: List[int],
+                   language: str,
+                   type_of_lengths: str,
+                   xlim: Optional[Union[List, Tuple]] = (0, 20000),
+                   ylim: Optional[Union[List, Tuple]] = (0, 100),
+                   bins: int = 20,
+                   fp: str = "./Insights/histogram.png"
+                   ):
+    plt.hist(lengths, range=xlim, bins=bins, color='#1b9e77')
+    plt.xlim(xlim)
+    plt.ylim(ylim)
+
+    # Mean and std lines
+    plt.axvline(np.mean(lengths), color='k', linestyle='dashed', linewidth=2)
+    plt.axvline(np.mean(lengths) - np.std(lengths), color='k', linestyle='dotted', linewidth=1)
+    plt.axvline(np.mean(lengths) + np.std(lengths), color='k', linestyle='dotted', linewidth=1)
+    # Median line
+    plt.axvline(np.median(lengths), color='#d95f02', linestyle='solid', linewidth=2)
+    plt.title(f"Histogram of {type_of_lengths} length of {language}")
+    plt.savefig(fp)
+    plt.show()
+    plt.close()
+
+
+def compare_en_de_texts(response: Dict):
+    # Iterate through the documents and count availability of languages
+    documents = response["hits"]["hits"]
+
+    for document in tqdm(documents):
+        en_ref = ""
+        en_summ = ""
+        de_ref = ""
+        de_summ = ""
+        for language, doc_info in document["_source"].items():
+            if not language in ["german", "english"]:
+                continue
+
+            if doc_info["documentInformation"]["documentContent"] != "NA" and \
+                    doc_info["documentInformation"]["summaryContent"] != "NA":
+                # Replace misplaced utf8 chars
+                ref_text = get_split_text(doc_info["documentInformation"]["documentContent"])
+                summary_text = get_split_text(doc_info["documentInformation"]["summaryContent"])
+
+                if language == "german":
+                    de_ref = ref_text
+                    de_summ = summary_text
+                elif language == "english":
+                    en_ref = ref_text
+                    en_summ = summary_text
+
+        if de_summ and en_summ:
+            print("Reference text alignments")
+            for en_block, de_block in zip(en_ref, de_ref):
+                print(en_block)
+                print(de_block)
+                print("\n\n\n")
+
+            print("\n\n\n\n\nSummary text alignments")
+            for en_block, de_block in zip(en_summ, de_ref):
+                print(en_block)
+                print(de_block)
+                print("\n\n\n")
+
+        return 0
+
+
 if __name__ == '__main__':
+    # Set correct font size for plots
+    matplotlib.rc('xtick', labelsize=18)
+    matplotlib.rc('ytick', labelsize=18)
+    # set LaTeX font
+    matplotlib.rcParams['mathtext.fontset'] = 'stix'
+    matplotlib.rcParams['font.family'] = 'STIXGeneral'
+
+    # Reference time to compare number of available articles
     print(f"Started at {datetime.now()}")
     index_name = "eur-lex-multilingual"
 
+    # Open connection to Opensearch database
     client = OpenSearch([{'host': 'elastic-dbs.ifi.uni-heidelberg.de', 'port': 443}],
                         http_auth=(USER, PASSWORD),
                         use_ssl=True,
@@ -109,36 +211,35 @@ if __name__ == '__main__':
     batch_size = 50
     languages_with_non_empty_docs = []
 
+    # Will store information in a list per language
     reference_token_lengths = defaultdict(list)
     summary_token_lengths = defaultdict(list)
     compression_ratios = defaultdict(list)
 
+    # Batch-processing of the available articles
     for start in range(0, total_docs, batch_size):
         response = client.search(body={}, index=index_name, size=batch_size, from_=start)
 
         update_document_language_distribution(response, languages_with_non_empty_docs)
         analyze_text_lengths(response, reference_token_lengths, summary_token_lengths, compression_ratios)
 
+    # use the final batch to compare a sample reference and summary
+    compare_en_de_texts(response)
+
     language_distribution = Counter(languages_with_non_empty_docs)
     for language, frequency in language_distribution.most_common():
         print(f"{language} & {frequency} \\\\")
 
     for language in reference_token_lengths.keys():
+        # For reference, ignore information on other languages for legibility
         if language not in ["german", "english", "french"]:
             continue
-        print(f"#######################################\n"
-              f"Stats for {language}:")
-        print(f"Mean reference length: {np.mean(reference_token_lengths[language]):.2f} "
-              f"+/- {np.std(reference_token_lengths[language]):.2f}")
-        print(f"Median reference length: {np.median(reference_token_lengths[language]):.2f}\n")
+        print_language_stats(language, reference_token_lengths, summary_token_lengths, compression_ratios)
 
-        print(f"Mean summary length: {np.mean(summary_token_lengths[language]):.2f} "
-              f"+/- {np.std(summary_token_lengths[language]):.2f}")
-        print(f"Median summary length: {np.median(summary_token_lengths[language]):.2f}\n")
-
-        print(f"Mean compression ratio: {np.mean(compression_ratios[language])}\n\n")
-
-
-
-
+        histogram_plot(reference_token_lengths[language], language, "reference",
+                       xlim=[0, 30000],
+                       fp=f"./Insights/histogram-reference-{language}.png")
+        histogram_plot(summary_token_lengths[language], language, "summary",
+                       xlim=[0, 3000],
+                       fp=f"./Insights/histogram-summary-{language}.png")
 
