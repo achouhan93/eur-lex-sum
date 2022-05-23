@@ -1,3 +1,7 @@
+"""
+Script to compute the basic length stats of the different language-specific corpora.
+"""
+
 from typing import List, Dict, Union, Tuple, Optional
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -227,8 +231,15 @@ if __name__ == '__main__':
     compare_en_de_texts(response)
 
     language_distribution = Counter(languages_with_non_empty_docs)
+    x_label = []
+    y = []
     for language, frequency in language_distribution.most_common():
         print(f"{language} & {frequency} \\\\")
+        x_label.append(language)
+        y.append(frequency)
+
+    x_value = [i for i in range(len(x_label))]
+
 
     for language in reference_token_lengths.keys():
         # For reference, ignore information on other languages for legibility
@@ -243,3 +254,8 @@ if __name__ == '__main__':
                        xlim=[0, 3000],
                        fp=f"./Insights/histogram-summary-{language}.png")
 
+        plt.hist(x_value, y, color='#1b9e77')
+        plt.xticks(x_value, x_label)
+
+        plt.savefig("./Insights/language_distribution.png")
+        plt.show()
