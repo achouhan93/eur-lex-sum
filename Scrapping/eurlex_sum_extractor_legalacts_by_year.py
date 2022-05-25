@@ -34,6 +34,8 @@ from bs4 import BeautifulSoup
 from opensearchpy import OpenSearch
 from tqdm import tqdm
 
+import PyPDF2
+
 # ### Celex Number Extraction
 
 # In[3]:
@@ -212,8 +214,41 @@ def get_file_by_id(lang, celex_id):
             if 'The requested document does not exist.' in pdf_info.text:
                 # If PDF is also not available , then Raise Exception.
                 raise Exception
-        
-            document_content = pdf_info.content
+
+            # Save the PDF document
+            working_dir = os.getcwd()
+            directory = os.path.join(working_dir, 'Scrapped_Data_Information')
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            
+            pdf_directory = os.path.join(directory, 'PDF_Documents')
+            if not os.path.exists(pdf_directory):
+                os.makedirs(pdf_directory)
+
+            pdf_document_path = os.path.join(pdf_directory, celex_id + "_" + lang + ".pdf" )
+
+            save_pdf = open(pdf_document_path, 'wb')
+            save_pdf.write(pdf_info.content)
+            save_pdf.close()
+
+            read_pdf = PyPDF2.PdfFileReader(pdf_document_path, strict=False)
+
+            all_pages = {}
+            num = read_pdf.getNumPages()
+            for page in range(num):
+                data = read_pdf.getPage(page)
+
+                # extract the page's text
+                page_text = data.extractText()
+
+                # put the text data into the dict
+                all_pages[page] = page_text
+            
+            content = ''
+            for page in all_pages:
+                content = content + '[NEW PAGE] ' + all_pages[page] 
+            
+            document_content = content
             track_dict[lang] = "PDF"
         else:
             # Saving HTML File (if available)
