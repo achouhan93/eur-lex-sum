@@ -5,7 +5,6 @@ Script to compute the basic length stats of the different language-specific corp
 from typing import List, Dict, Union, Tuple, Optional
 from collections import Counter, defaultdict
 from datetime import datetime
-import regex
 
 import numpy as np
 from tqdm import tqdm
@@ -15,6 +14,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from config import USER, PASSWORD
+from utils import clean_text, compute_whitespace_split_length, get_split_text, print_language_stats
 
 
 def update_document_language_distribution(document: Dict, collect_occurrences: List) -> None:
@@ -63,68 +63,6 @@ def analyze_text_lengths(document: Dict, reference_lengths: Dict, summary_length
         summary_lengths[language].append(summary_length)
         # Compute compression ratio
         compression_ratios[language].append(reference_length / summary_length)
-
-
-def clean_text(text: str) -> str:
-    """
-    Internally converts the text to a simple paragraph estimate, and re-joins it after simple cleaning operations.
-    """
-
-    split_text = get_split_text(text)
-
-    # Remove empty lines and the XML identifier in some first line
-    split_text = [line.strip() for line in split_text if line.strip() and not line.endswith(".xml")]
-    # TODO: Merge and remove lines based on further heuristics to clean up
-    # for line in split_text:
-    #     # Check for short lines
-    #     if len(line.split(" ")) < 4:
-    #         # Skip the first line which contains a .xml file name
-    #         if line.endswith(".xml"):
-    #             continue
-    #         # If digits are present, it is likely a match with the previous line
-    #         elif regex.findall(r"[0-9]", line):
-    #             continue
-    #         # Or if we find other "item-like" characters, such as "a)" or "b)"
-    #         elif regex.match(r"[a-z])", line):
-
-    text = " ".join(split_text).replace("\n", " ")
-    return text
-
-
-def get_split_text(text: str) -> List[str]:
-    """
-    Utility function to generate pseudo-paragraph splitting
-    """
-    # Replace misplaced utf8 chars
-    text = text.replace(u"\xa0", u" ")
-
-    # Use two or more consecutive newlines as a preliminary split decision
-    text = regex.sub(r"\n{2,}", r"[SPLIT]", text)
-    split_text = text.split("[SPLIT]")
-    return split_text
-
-
-def compute_whitespace_split_length(text: str) -> int:
-    return len(text.split(" "))
-
-
-def print_language_stats(language: str,
-                         reference_lengths: Dict[str, List[int]],
-                         summary_lengths: Dict[str, List[int]],
-                         compression_ratios: Dict[str, List[float]]) -> None:
-    print(f"#######################################\n"
-          f"Stats for {language}:")
-    print_dist(reference_lengths[language], "reference lengths")
-    print_dist(summary_lengths[language], "summary lengths")
-    print_dist(compression_ratios[language], "compression ratio")
-
-
-def print_dist(lengths: List[Union[int, float]], description: str) -> None:
-    print(f"Mean {description}: {np.mean(lengths[language]):.2f} "
-          f"+/- {np.std(lengths[language]):.2f}")
-    print(f"Median {description}: {np.median(lengths[language]):.2f}\n")
-    print(f"Minimum length of {description}: {np.min(lengths[language]):.2f}\n"
-          f"Maximum length of {description}: {np.max(lengths[language]):.2f}")
 
 
 def histogram_plot(lengths: List[int],
@@ -245,7 +183,10 @@ if __name__ == '__main__':
         if language not in ["german", "english", "french"]:
             continue
 
-        print_language_stats(language, reference_token_lengths, summary_token_lengths, compression_ratios)
+        print_language_stats(language,
+                             reference_token_lengths[language],
+                             summary_token_lengths[language],
+                             compression_ratios[language])
 
         histogram_plot(reference_token_lengths[language], language, "reference",
                        xlim=[0, 30000],
