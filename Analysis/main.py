@@ -10,53 +10,59 @@ import regex
 import numpy as np
 from tqdm import tqdm
 from opensearchpy import OpenSearch
+from opensearchpy.helpers import scan
 import matplotlib
 import matplotlib.pyplot as plt
 
 from config import USER, PASSWORD
 
 
-def update_document_language_distribution(response: Dict, collect_occurrences: List):
+def update_document_language_distribution(document: Dict, collect_occurrences: List) -> None:
 
     # Iterate through the documents and count availability of languages
-    documents = response["hits"]["hits"]
-
-    for document in tqdm(documents):
-        for language, doc_info in document["_source"].items():
-            # Check for cases were mismatch of N/A data is found wrt the summary
-            if doc_info["documentInformation"]["documentContent"] == "NA" and \
-               doc_info["documentInformation"]["summaryContent"] != "NA":
-                # raise AssertionError(f"Document summary is non-empty for non-existent document "
-                #                      f"{document['_id']} ({language})")
+    for language, doc_info in document["_source"].items():
+        # Check for cases were mismatch of N/A data is found wrt the summary
+        if doc_info["documentInformation"]["documentContent"] == "NA" and \
+           doc_info["documentInformation"]["summaryContent"] != "NA":
+            # We only care about non-irish exceptions.
+            if language != "irish":
                 print(f"Found non-empty summary for empty document {document['_id']} ({language})")
-            # Otherwise, this is all good
-            elif doc_info["documentInformation"]["documentContent"] != "NA" and \
-                 doc_info["documentInformation"]["summaryContent"] != "NA":
-                collect_occurrences.append(language)
+        # Otherwise, this is all good
+        elif doc_info["documentInformation"]["documentContent"] != "NA" and \
+                doc_info["documentInformation"]["summaryContent"] != "NA":
+            collect_occurrences.append(language)
 
 
-def analyze_text_lengths(response: Dict, reference_lengths: Dict, summary_lengths: Dict, compression_ratios: Dict):
-    # Iterate through the documents and count availability of languages
-    documents = response["hits"]["hits"]
+def analyze_text_lengths(document: Dict, reference_lengths: Dict, summary_lengths: Dict, compression_ratios: Dict) \
+        -> None:
 
-    for document in tqdm(documents):
-        for language, doc_info in document["_source"].items():
-            # Skip any document that doesn't have a pair of content and summary
-            if doc_info["documentInformation"]["documentContent"] == "NA" or \
-               doc_info["documentInformation"]["summaryContent"] == "NA":
-                continue
+    # Only consider documents that are available in at least 23 languages
+    available_languages = 0
+    for _, doc_info in document["_source"].items():
+        if doc_info["documentInformation"]["documentContent"] != "NA" and \
+                doc_info["documentInformation"]["summaryContent"] != "NA":
+            available_languages += 1
 
-            reference = doc_info["documentInformation"]["documentContent"]
-            summary = doc_info["documentInformation"]["summaryContent"]
+    if available_languages < 23:
+        return None
 
-            reference_length = compute_whitespace_split_length(clean_text(reference))
-            # Add tokenized length of reference
-            reference_lengths[language].append(reference_length)
-            # Add tokenized length of summary
-            summary_length = compute_whitespace_split_length(clean_text(summary))
-            summary_lengths[language].append(summary_length)
-            # Compute compression ratio
-            compression_ratios[language].append(reference_length / summary_length)
+    for language, doc_info in document["_source"].items():
+        # Skip any document that doesn't have a pair of content and summary
+        if doc_info["documentInformation"]["documentContent"] == "NA" or \
+           doc_info["documentInformation"]["summaryContent"] == "NA":
+            continue
+
+        reference = doc_info["documentInformation"]["documentContent"]
+        summary = doc_info["documentInformation"]["summaryContent"]
+
+        reference_length = compute_whitespace_split_length(clean_text(reference))
+        # Add tokenized length of reference
+        reference_lengths[language].append(reference_length)
+        # Add tokenized length of summary
+        summary_length = compute_whitespace_split_length(clean_text(summary))
+        summary_lengths[language].append(summary_length)
+        # Compute compression ratio
+        compression_ratios[language].append(reference_length / summary_length)
 
 
 def clean_text(text: str) -> str:
@@ -105,25 +111,27 @@ def compute_whitespace_split_length(text: str) -> int:
 def print_language_stats(language: str,
                          reference_lengths: Dict[str, List[int]],
                          summary_lengths: Dict[str, List[int]],
-                         compression_ratios: Dict[str, List[str]]) -> None:
+                         compression_ratios: Dict[str, List[float]]) -> None:
     print(f"#######################################\n"
           f"Stats for {language}:")
-    print(f"Mean reference length: {np.mean(reference_lengths[language]):.2f} "
-          f"+/- {np.std(reference_lengths[language]):.2f}")
-    print(f"Median reference length: {np.median(reference_lengths[language]):.2f}\n")
+    print_dist(reference_lengths[language], "reference lengths")
+    print_dist(summary_lengths[language], "summary lengths")
+    print_dist(compression_ratios[language], "compression ratio")
 
-    print(f"Mean summary length: {np.mean(summary_lengths[language]):.2f} "
-          f"+/- {np.std(summary_lengths[language]):.2f}")
-    print(f"Median summary length: {np.median(summary_lengths[language]):.2f}\n")
 
-    print(f"Mean compression ratio: {np.mean(compression_ratios[language])}\n\n")
+def print_dist(lengths: List[Union[int, float]], description: str) -> None:
+    print(f"Mean {description}: {np.mean(lengths[language]):.2f} "
+          f"+/- {np.std(lengths[language]):.2f}")
+    print(f"Median {description}: {np.median(lengths[language]):.2f}\n")
+    print(f"Minimum length of {description}: {np.min(lengths[language]):.2f}\n"
+          f"Maximum length of {description}: {np.max(lengths[language]):.2f}")
 
 
 def histogram_plot(lengths: List[int],
                    language: str,
                    type_of_lengths: str,
                    xlim: Optional[Union[List, Tuple]] = (0, 20000),
-                   ylim: Optional[Union[List, Tuple]] = (0, 100),
+                   ylim: Optional[Union[List, Tuple]] = (0, 150),
                    bins: int = 20,
                    fp: str = "./Insights/histogram.png"
                    ):
@@ -143,46 +151,41 @@ def histogram_plot(lengths: List[int],
     plt.close()
 
 
-def compare_en_de_texts(response: Dict):
-    # Iterate through the documents and count availability of languages
-    documents = response["hits"]["hits"]
+def compare_en_de_texts(document: Dict):
 
-    for document in tqdm(documents):
-        en_ref = ""
-        en_summ = ""
-        de_ref = ""
-        de_summ = ""
-        for language, doc_info in document["_source"].items():
-            if not language in ["german", "english"]:
-                continue
+    en_ref = ""
+    en_summ = ""
+    de_ref = ""
+    de_summ = ""
+    for language, doc_info in document["_source"].items():
+        if language not in ["german", "english"]:
+            continue
 
-            if doc_info["documentInformation"]["documentContent"] != "NA" and \
-                    doc_info["documentInformation"]["summaryContent"] != "NA":
-                # Replace misplaced utf8 chars
-                ref_text = get_split_text(doc_info["documentInformation"]["documentContent"])
-                summary_text = get_split_text(doc_info["documentInformation"]["summaryContent"])
+        if doc_info["documentInformation"]["documentContent"] != "NA" and \
+                doc_info["documentInformation"]["summaryContent"] != "NA":
+            # Replace misplaced utf8 chars
+            ref_text = get_split_text(doc_info["documentInformation"]["documentContent"])
+            summary_text = get_split_text(doc_info["documentInformation"]["summaryContent"])
 
-                if language == "german":
-                    de_ref = ref_text
-                    de_summ = summary_text
-                elif language == "english":
-                    en_ref = ref_text
-                    en_summ = summary_text
+            if language == "german":
+                de_ref = ref_text
+                de_summ = summary_text
+            elif language == "english":
+                en_ref = ref_text
+                en_summ = summary_text
 
-        if de_summ and en_summ:
-            print("Reference text alignments")
-            for en_block, de_block in zip(en_ref, de_ref):
-                print(en_block)
-                print(de_block)
-                print("\n\n\n")
+    if de_summ and en_summ:
+        print("Reference text alignments")
+        for en_block, de_block in zip(en_ref, de_ref):
+            print(en_block)
+            print(de_block)
+            print("\n\n\n")
 
-            print("\n\n\n\n\nSummary text alignments")
-            for en_block, de_block in zip(en_summ, de_ref):
-                print(en_block)
-                print(de_block)
-                print("\n\n\n")
-
-        return 0
+        print("\n\n\n\n\nSummary text alignments")
+        for en_block, de_block in zip(en_summ, de_ref):
+            print(en_block)
+            print(de_block)
+            print("\n\n\n")
 
 
 if __name__ == '__main__':
@@ -194,7 +197,7 @@ if __name__ == '__main__':
     matplotlib.rcParams['font.family'] = 'STIXGeneral'
 
     # Reference time to compare number of available articles
-    print(f"Started at {datetime.now()}")
+    print(f"Started at {datetime.now().isoformat()}")
     index_name = "eur-lex-multilingual"
 
     # Open connection to Opensearch database
@@ -206,12 +209,6 @@ if __name__ == '__main__':
                         ssl_assert_hostname=False,
                         ssl_show_warn=False)
 
-    # Get relevant documents to determine pagination:
-    response = client.search(body={}, index=index_name, size=0)
-    # Number of documents found
-    total_docs = response["hits"]["total"]["value"]
-    print(f"{total_docs} documents found")
-
     batch_size = 50
     languages_with_non_empty_docs = []
 
@@ -220,9 +217,8 @@ if __name__ == '__main__':
     summary_token_lengths = defaultdict(list)
     compression_ratios = defaultdict(list)
 
-    # Batch-processing of the available articles
-    for start in range(0, total_docs, batch_size):
-        response = client.search(body={}, index=index_name, size=batch_size, from_=start)
+    # Batch-processing of the available articles with scan()
+    for response in tqdm(scan(query={}, client=client, index=index_name, size=batch_size, request_timeout=50)):
 
         update_document_language_distribution(response, languages_with_non_empty_docs)
         analyze_text_lengths(response, reference_token_lengths, summary_token_lengths, compression_ratios)
@@ -233,18 +229,22 @@ if __name__ == '__main__':
     language_distribution = Counter(languages_with_non_empty_docs)
     x_label = []
     y = []
+
+    language_string = ""
+    frequency_string = ""
     for language, frequency in language_distribution.most_common():
-        print(f"{language} & {frequency} \\\\")
+        language_string += f"{language} & "
+        frequency_string += f"{frequency} & "
         x_label.append(language)
         y.append(frequency)
 
-    x_value = [i for i in range(len(x_label))]
-
+    print(f"{language_string}\n{frequency_string}")
 
     for language in reference_token_lengths.keys():
         # For reference, ignore information on other languages for legibility
         if language not in ["german", "english", "french"]:
             continue
+
         print_language_stats(language, reference_token_lengths, summary_token_lengths, compression_ratios)
 
         histogram_plot(reference_token_lengths[language], language, "reference",
@@ -254,8 +254,16 @@ if __name__ == '__main__':
                        xlim=[0, 3000],
                        fp=f"./Insights/histogram-summary-{language}.png")
 
-        plt.hist(x_value, y, color='#1b9e77')
-        plt.xticks(x_value, x_label)
+    x_value = [3*i for i in range(len(x_label))]
+    plt.bar(x_value, y, color='#1b9e77', width=2.6)
+    # Use language codes for better readability
+    x_label = ["en", "es", "de", "fr", "it", "dk", "nl", "pt", "ro", "fi", "sw", "bg", "el", "li", "hu", "cz", "et",
+               "lt", "po", "sk", "sl", "mt", "cr", "ga"]
+    plt.xticks(x_value, x_label, rotation=90)
+    plt.xlim([-2, max(x_value)+2])
 
-        plt.savefig("./Insights/language_distribution.png")
-        plt.show()
+    fig = plt.gcf()
+    fig.set_figwidth(16)
+
+    plt.savefig("./Insights/language_distribution.png", dpi=400, bbox_inches="tight")
+    plt.show()
