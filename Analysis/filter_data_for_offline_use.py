@@ -85,6 +85,8 @@ if __name__ == '__main__':
         if has_all_relevant_languages_available(doc):
             add_to_sample_store(doc, valid_sample_store)
 
-    with open("offline_data_storage.pkl", "rb") as f:
+    input("All data samples saved, please confirm to save file.")
+
+    with open("offline_data_storage.pkl", "wb") as f:
         pickle.dump(valid_sample_store, f)
     print(f"Successfully wrote {len(valid_sample_store['samples'])} samples to disk.")
