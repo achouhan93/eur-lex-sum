@@ -14,16 +14,34 @@ from config import USER, PASSWORD
 
 
 def has_all_relevant_languages_available(response_doc: Dict) -> bool:
+    """
+    Will check whether documents and summaries are available in all 24 languages.
+    Only those documents will later be considered for the validation and test set.
+    """
     available_langs = set()
     for language, doc_info in response_doc["_source"].items():
         # Check that both reference and summary text are available in that language
-        if doc_info["documentInformation"]["documentContent"] != "NA" and \
-           doc_info["documentInformation"]["summaryContent"] != "NA" and \
-           language != "irish":
+        if document_not_empty(doc_info):
             available_langs.add(language)
 
-    # Without irish, there are 23 official languages. Other samples will be dropped (less than 100)
-    if len(available_langs) == 23:
+    if len(available_langs) == 24:
+        return True
+    else:
+        return False
+
+
+def has_at_least_one_summary_available(response_doc: Dict) -> bool:
+    """
+    Will check whether documents and summaries are available in all 24 languages.
+    Only those documents will later be considered for the validation and test set.
+    """
+    available_langs = set()
+    for language, doc_info in response_doc["_source"].items():
+        # Check that both reference and summary text are available in that language
+        if document_not_empty(doc_info):
+            available_langs.add(language)
+
+    if len(available_langs) > 0:
         return True
     else:
         return False
@@ -33,27 +51,40 @@ def add_to_sample_store(response_doc: Dict, index: Dict) -> None:
 
     sample_template = {
         "celex_id": response_doc["_id"],
-        "for_test_set": is_suitable_for_test_set(response_doc),
+        "for_test_set": has_all_relevant_languages_available(response_doc),
     }
 
     # Add the language content in a less nested way
     for language, doc_info in response_doc["_source"].items():
-        sample_template[language] = {
-            "reference_text": doc_info["documentInformation"]["documentContent"],
-            "summary_text": doc_info["documentInformation"]["summaryContent"]
-        }
+        # Only include the actual content if both reference and summary are available.
+        if document_not_empty(doc_info) and document_not_scan(doc_info, language, response_doc["_id"]):
+            sample_template[language] = {
+                "reference_text": doc_info["documentInformation"]["documentContent"],
+                "summary_text": doc_info["documentInformation"]["summaryContent"]
+            }
+        # FIXME: Should we add this at all?
+        else:
+            sample_template[language] = {
+                "reference_text": "",
+                "summary_text": ""
+            }
     index["samples"].append(sample_template)
 
 
-def is_suitable_for_test_set(response_doc: Dict) -> bool:
-    """
-    We want to only use documents that also have irish data available as test samples,
-    since they are the least likely language.
-    """
-    if response_doc["_source"]["irish"]["documentInformation"]["documentContent"] != "NA" and \
-       response_doc["_source"]["irish"]["documentInformation"]["summaryContent"] != "NA":
+def document_not_empty(doc_info):
+    if doc_info["documentInformation"]["documentContent"] != "NA" and \
+       doc_info["documentInformation"]["summaryContent"] != "NA":
         return True
     else:
+        return False
+
+
+def document_not_scan(doc_info, language, celex_id):
+    if "NEW PAGE" not in doc_info["documentInformation"]["documentContent"] and \
+       "NEW PAGE" not in doc_info["documentInformation"]["summaryContent"]:
+        return True
+    else:
+        print(f"{celex_id} has scanned document for language '{language}'")
         return False
 
 
@@ -80,9 +111,7 @@ if __name__ == '__main__':
 
     # Batch-processing of the available articles with scan()
     for doc in tqdm(scan(query={}, client=client, index=index_name, size=batch_size, request_timeout=50)):
-
-        # Only add if all 23 languages are available
-        if has_all_relevant_languages_available(doc):
+        if has_at_least_one_summary_available(doc):
             add_to_sample_store(doc, valid_sample_store)
 
     input("All data samples saved, please confirm to save file.")
