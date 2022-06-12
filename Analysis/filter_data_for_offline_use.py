@@ -21,7 +21,7 @@ def has_all_relevant_languages_available(response_doc: Dict) -> bool:
     available_langs = set()
     for language, doc_info in response_doc["_source"].items():
         # Check that both reference and summary text are available in that language
-        if document_not_empty(doc_info):
+        if document_not_empty(doc_info) and document_not_scan(doc_info):
             available_langs.add(language)
 
     if len(available_langs) == 24:
@@ -63,11 +63,11 @@ def add_to_sample_store(response_doc: Dict, index: Dict) -> None:
                 "summary_text": doc_info["documentInformation"]["summaryContent"]
             }
         # FIXME: Should we add this at all?
-        else:
-            sample_template[language] = {
-                "reference_text": "",
-                "summary_text": ""
-            }
+        # else:
+        #     sample_template[language] = {
+        #         "reference_text": "",
+        #         "summary_text": ""
+        #     }
     index["samples"].append(sample_template)
 
 
