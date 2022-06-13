@@ -2,12 +2,13 @@
 Based on the (filtered) corpus of offline data, compute stats
 """
 
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import pickle
-import json
+import time
 from collections import Counter
 
 from tqdm import tqdm
+import numpy as np
 
 from utils import clean_text, compute_whitespace_split_length, print_language_stats, identify_document_scans, \
     identify_duplicates_by_text, identify_duplicates_by_equality, print_short_percentiles
@@ -89,7 +90,7 @@ def filter_short_documents(celex_ids, reference_lengths, summary_lengths, filter
     return further_filtered_id_set
 
 
-def get_valid_keys_for_language(samples, language="english") -> List[str]:
+def get_valid_keys_for_language(samples, language) -> List[str]:
     references = []
     summaries = []
     celex_ids = []
@@ -183,6 +184,10 @@ def initial_analysis(samples):
 
 
 def verify_samples(data, test_candidates, valid_ids):
+    """
+    Validate the data samples of validation/test set, by identifying why certain samples have been dropped from the
+    complete status. This can either be an issue of length or multi-referencing.
+    """
     for sample in data:
         if sample["celex_id"] not in test_candidates and sample["for_test_set"]:
             if len(sample["english"]["reference_text"]) <= len(sample["english"]["summary_text"]):
@@ -212,7 +217,10 @@ def verify_samples(data, test_candidates, valid_ids):
 
 
 def find_all_invalid_samples(samples):
-
+    """
+    Another investigative function that prints (and stores) the celex ids with languages in which they have the same
+    input and output lengths (due to a bug?).
+    """
     invalid_samples = {}
     for sample in samples:
         for lang, texts in sample.items():
@@ -227,10 +235,11 @@ def find_all_invalid_samples(samples):
                 print(f"{sample['celex_id']} ({lang}) with length {len(sample[lang]['reference_text'])}")
 
 
-def identify_validation_test_ids(data):
-    langs = ['french', 'german', 'english', 'spanish', 'italian', 'portuguese', 'greek', 'dutch', 'danish', 'finnish',
-             'swedish', 'romanian', 'czech', 'polish', 'lithuanian', 'slovenian', 'latvian', 'bulgarian', 'estonian',
-             'hungarian', 'slovak', 'maltese', 'croatian', 'irish']
+def identify_lang_ids(data, langs) -> Tuple:
+    """
+    Will generate the list of valid Celex IDs for each of the languages, based on length and multi-reference filters.
+    Also identifies "complete" samples (i.e., available in 24 languages) to generate the validation and test set.
+    """
     by_language_valid_ids = {}
     print("Compute language-specific valid samples...")
     for lang in tqdm(langs):
@@ -242,10 +251,21 @@ def identify_validation_test_ids(data):
         validation_test_candidates = validation_test_candidates.intersection(set(valid_language_celex_ids))
     print(f"{len(validation_test_candidates)} candidates suitable for validation/test set.")
 
-    return validation_test_candidates
+    return by_language_valid_ids, list(validation_test_candidates)
 
+
+def celex_text_sample(celex_id, texts):
+    return {celex_id: {"reference_text": clean_text(texts["reference_text"]),
+                       "summary_text": clean_text(texts["summary_text"])}
+    }
 
 if __name__ == '__main__':
+    langs = ['french', 'german', 'english', 'spanish', 'italian', 'portuguese', 'greek', 'dutch', 'danish', 'finnish',
+             'swedish', 'romanian', 'czech', 'polish', 'lithuanian', 'slovenian', 'latvian', 'bulgarian', 'estonian',
+             'hungarian', 'slovak', 'maltese', 'croatian', 'irish']
+
+    rng = np.random.default_rng(seed=12121994)
+
     with open("offline_data_storage.pkl", "rb") as f:
         data = pickle.load(f)
 
@@ -258,7 +278,33 @@ if __name__ == '__main__':
     print(f"{num_test_set_samples} samples are suitable for usage in the validation/test set.")
     print(f"That is out of a total number of {len(data)} distinct samples.")
 
-    validation_test_keys = identify_validation_test_ids(data)
+    lang_samples, validation_test_keys = identify_lang_ids(data, langs)
+    # Randomize order to pick from
+    rng.shuffle(validation_test_keys)
+
+    validation_set = validation_test_keys[:len(validation_test_keys) // 2]
+    test_set = validation_test_keys[len(validation_test_keys) // 2:]
+
+    clean_data = {}
+    for language in tqdm(langs):
+        # Separate the ids into each of the corresponding sets.
+        clean_data[language] = {"train": [], "validation": [], "test": []}
+
+        for sample in data:
+            # If the current sample is contained
+            if sample["celex_id"] in lang_samples[language]:
+                if sample["celex_id"] in validation_set:
+                    clean_data[language]["validation"].append(celex_text_sample(sample["celex_id"], sample[language]))
+                elif sample["celex_id"] in test_set:
+                    clean_data[language]["test"].append(celex_text_sample(sample["celex_id"], sample[language]))
+                else:
+                    clean_data[language]["train"].append(celex_text_sample(sample["celex_id"], sample[language]))
+
+    del data
+    time.sleep(2)
+    with open("clean_data.pkl", "wb") as f:
+        pickle.dump(clean_data, f)
+
 
 
 
