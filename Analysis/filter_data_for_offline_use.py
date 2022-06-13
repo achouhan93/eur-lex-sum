@@ -21,7 +21,7 @@ def has_all_relevant_languages_available(response_doc: Dict) -> bool:
     available_langs = set()
     for language, doc_info in response_doc["_source"].items():
         # Check that both reference and summary text are available in that language
-        if document_not_empty(doc_info) and document_not_scan(doc_info):
+        if document_not_empty(doc_info) and document_not_scan(doc_info, language, response_doc["_id"]):
             available_langs.add(language)
 
     if len(available_langs) == 24:
