@@ -255,9 +255,8 @@ def identify_lang_ids(data: List[Dict], langs: List[str]) -> Tuple:
     return by_language_valid_ids, list(validation_test_candidates)
 
 
-def celex_text_sample(celex_id, texts):
-    return {celex_id: {"reference_text": clean_text(texts["reference_text"]),
-                       "summary_text": clean_text(texts["summary_text"])}}
+def celex_text_sample(texts):
+    return {"reference_text": clean_text(texts["reference_text"]), "summary_text": clean_text(texts["summary_text"])}
 
 
 if __name__ == '__main__':
@@ -280,7 +279,7 @@ if __name__ == '__main__':
         all_celex_ids_until_1990 = [sample["celex_id"] for sample in data]
 
         with open("all_valid_celex_ids.json", "w") as f:
-            json.dump(all_celex_ids_until_1990, f)
+            json.dump(all_celex_ids_until_1990, f, indent=2)
 
     # Print quick distribution
     count_total_number_instances(data)
@@ -303,17 +302,18 @@ if __name__ == '__main__':
     clean_data = {}
     for language in tqdm(langs):
         # Separate the ids into each of the corresponding sets.
-        clean_data[language] = {"train": [], "validation": [], "test": []}
+        clean_data[language] = {"train": {}, "validation": {}, "test": {}}
 
         for sample in data:
             # If the current sample is contained
             if sample["celex_id"] in lang_samples[language]:
                 if sample["celex_id"] in validation_set:
-                    clean_data[language]["validation"].append(celex_text_sample(sample["celex_id"], sample[language]))
+                    split = "validation"
                 elif sample["celex_id"] in test_set:
-                    clean_data[language]["test"].append(celex_text_sample(sample["celex_id"], sample[language]))
+                    split = "test"
                 else:
-                    clean_data[language]["train"].append(celex_text_sample(sample["celex_id"], sample[language]))
+                    split = "train"
+                clean_data[language][split][sample["celex_id"]] = celex_text_sample(sample[language])
 
     del data
     time.sleep(2)
