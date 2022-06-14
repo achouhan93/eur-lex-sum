@@ -5,6 +5,7 @@ Based on the (filtered) corpus of offline data, compute stats
 from typing import List, Dict, Tuple
 import pickle
 import time
+import json
 from collections import Counter
 
 from tqdm import tqdm
@@ -183,7 +184,7 @@ def initial_analysis(samples):
     print_language_stats("English", reference_token_lengths, summary_token_lengths, compression_ratios)
 
 
-def verify_samples(data, test_candidates, valid_ids):
+def verify_samples(data: List[Dict], test_candidates: List[str], valid_ids: Dict):
     """
     Validate the data samples of validation/test set, by identifying why certain samples have been dropped from the
     complete status. This can either be an issue of length or multi-referencing.
@@ -216,7 +217,7 @@ def verify_samples(data, test_candidates, valid_ids):
                                           f"{len(check_sample[lang]['summary_text'])}")
 
 
-def find_all_invalid_samples(samples):
+def find_all_invalid_samples(samples: List[Dict]):
     """
     Another investigative function that prints (and stores) the celex ids with languages in which they have the same
     input and output lengths (due to a bug?).
@@ -235,7 +236,7 @@ def find_all_invalid_samples(samples):
                 print(f"{sample['celex_id']} ({lang}) with length {len(sample[lang]['reference_text'])}")
 
 
-def identify_lang_ids(data, langs) -> Tuple:
+def identify_lang_ids(data: List[Dict], langs: List[str]) -> Tuple:
     """
     Will generate the list of valid Celex IDs for each of the languages, based on length and multi-reference filters.
     Also identifies "complete" samples (i.e., available in 24 languages) to generate the validation and test set.
@@ -256,8 +257,8 @@ def identify_lang_ids(data, langs) -> Tuple:
 
 def celex_text_sample(celex_id, texts):
     return {celex_id: {"reference_text": clean_text(texts["reference_text"]),
-                       "summary_text": clean_text(texts["summary_text"])}
-    }
+                       "summary_text": clean_text(texts["summary_text"])}}
+
 
 if __name__ == '__main__':
     langs = ['french', 'german', 'english', 'spanish', 'italian', 'portuguese', 'greek', 'dutch', 'danish', 'finnish',
@@ -265,12 +266,21 @@ if __name__ == '__main__':
              'hungarian', 'slovak', 'maltese', 'croatian', 'irish']
 
     rng = np.random.default_rng(seed=12121994)
+    write_valid_ids = False
 
     with open("offline_data_storage.pkl", "rb") as f:
         data = pickle.load(f)
 
-    print("Successfully loaded samples")
+    print(f"Checkpoint data is from {data['created_at']}.")
+    print(f"Successfully loaded {len(data['samples'])} samples")
     data = data["samples"]
+
+    # Enable this to get a list of all considered ids in the original corpus from 1990 - today.
+    if write_valid_ids:
+        all_celex_ids_until_1990 = [sample["celex_id"] for sample in data]
+
+        with open("all_valid_celex_ids.json", "w") as f:
+            json.dump(all_celex_ids_until_1990, f)
 
     # Print quick distribution
     count_total_number_instances(data)
@@ -279,6 +289,11 @@ if __name__ == '__main__':
     print(f"That is out of a total number of {len(data)} distinct samples.")
 
     lang_samples, validation_test_keys = identify_lang_ids(data, langs)
+
+    # Iterate over samples to identify which cause issues
+    # verify_samples(data, validation_test_keys, lang_samples)
+    find_all_invalid_samples(data)
+
     # Randomize order to pick from
     rng.shuffle(validation_test_keys)
 
@@ -304,9 +319,3 @@ if __name__ == '__main__':
     time.sleep(2)
     with open("clean_data.pkl", "wb") as f:
         pickle.dump(clean_data, f)
-
-
-
-
-
-

@@ -5,6 +5,7 @@ Performs preliminary filtering such that all languages are non-empty.
 from typing import Dict
 from datetime import datetime
 import pickle
+import json
 
 from tqdm import tqdm
 from opensearchpy import OpenSearch
@@ -62,12 +63,6 @@ def add_to_sample_store(response_doc: Dict, index: Dict) -> None:
                 "reference_text": doc_info["documentInformation"]["documentContent"],
                 "summary_text": doc_info["documentInformation"]["summaryContent"]
             }
-        # FIXME: Should we add this at all?
-        # else:
-        #     sample_template[language] = {
-        #         "reference_text": "",
-        #         "summary_text": ""
-        #     }
     index["samples"].append(sample_template)
 
 
@@ -79,12 +74,13 @@ def document_not_empty(doc_info):
         return False
 
 
-def document_not_scan(doc_info, language, celex_id):
+def document_not_scan(doc_info, language, celex_id, verbose=False):
     if "NEW PAGE" not in doc_info["documentInformation"]["documentContent"] and \
        "NEW PAGE" not in doc_info["documentInformation"]["summaryContent"]:
         return True
     else:
-        print(f"{celex_id} has scanned document for language '{language}'")
+        if verbose:
+            print(f"{celex_id} has scanned document for language '{language}'")
         return False
 
 
@@ -92,6 +88,13 @@ if __name__ == '__main__':
     # Reference time to compare number of available articles
     print(f"Started at {datetime.now().isoformat()}")
     index_name = "eur-lex-multilingual"
+
+    # We might have pre-filtered IDs that should be taken into consideration
+    try:
+        with open("all_valid_celex_ids.json", "r") as f:
+            pre_filtered_ids = set(json.load(f))
+    except FileNotFoundError:
+        pre_filtered_ids = None
 
     # Open connection to Opensearch database
     client = OpenSearch([{'host': 'elastic-dbs.ifi.uni-heidelberg.de', 'port': 443}],
@@ -111,8 +114,14 @@ if __name__ == '__main__':
 
     # Batch-processing of the available articles with scan()
     for doc in tqdm(scan(query={}, client=client, index=index_name, size=batch_size, request_timeout=50)):
+        # Make sure we only take documents into consideration that have a summary
         if has_at_least_one_summary_available(doc):
-            add_to_sample_store(doc, valid_sample_store)
+            # If we have a pre-filtered list of IDs, use those to generate a reduced list
+            if pre_filtered_ids:
+                if doc["_id"] in pre_filtered_ids:
+                    add_to_sample_store(doc, valid_sample_store)
+            else:
+                add_to_sample_store(doc, valid_sample_store)
 
     input("All data samples saved, please confirm to save file.")
 
