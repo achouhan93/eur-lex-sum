@@ -234,6 +234,7 @@ def find_all_invalid_samples(samples: List[Dict]):
                 else:
                     invalid_samples[sample["celex_id"]].append(lang)
                 print(f"{sample['celex_id']} ({lang}) with length {len(sample[lang]['reference_text'])}")
+    print(invalid_samples)
 
 
 def identify_lang_ids(data: List[Dict], langs: List[str]) -> Tuple:

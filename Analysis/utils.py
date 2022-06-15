@@ -27,7 +27,7 @@ def clean_text(text: str) -> str:
     #         # Or if we find other "item-like" characters, such as "a)" or "b)"
     #         elif regex.match(r"[a-z])", line):
 
-    text = " ".join(split_text).replace("\n", " ")
+    text = "\n".join(split_text)
     return text
 
 
