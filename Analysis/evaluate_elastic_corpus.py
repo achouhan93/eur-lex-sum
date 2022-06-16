@@ -2,19 +2,17 @@
 Script to compute the basic length stats of the different language-specific corpora.
 """
 
-from typing import List, Dict, Union, Tuple, Optional
+from typing import List, Dict
 from collections import Counter, defaultdict
 from datetime import datetime
 
-import numpy as np
 from tqdm import tqdm
 from opensearchpy import OpenSearch
 from opensearchpy.helpers import scan
-import matplotlib
 import matplotlib.pyplot as plt
 
 from config import USER, PASSWORD
-from utils import clean_text, compute_whitespace_split_length, get_split_text, print_language_stats
+from utils import clean_text, compute_whitespace_split_length, get_split_text, print_language_stats, histogram_plot
 
 
 def update_document_language_distribution(document: Dict, collect_occurrences: List) -> None:
@@ -65,30 +63,6 @@ def analyze_text_lengths(document: Dict, reference_lengths: Dict, summary_length
         compression_ratios[language].append(reference_length / summary_length)
 
 
-def histogram_plot(lengths: List[int],
-                   language: str,
-                   type_of_lengths: str,
-                   xlim: Optional[Union[List, Tuple]] = (0, 20000),
-                   ylim: Optional[Union[List, Tuple]] = (0, 150),
-                   bins: int = 20,
-                   fp: str = "./Insights/histogram.png"
-                   ):
-    plt.hist(lengths, range=xlim, bins=bins, color='#1b9e77')
-    plt.xlim(xlim)
-    plt.ylim(ylim)
-
-    # Mean and std lines
-    plt.axvline(np.mean(lengths), color='k', linestyle='dashed', linewidth=2)
-    plt.axvline(np.mean(lengths) - np.std(lengths), color='k', linestyle='dotted', linewidth=1)
-    plt.axvline(np.mean(lengths) + np.std(lengths), color='k', linestyle='dotted', linewidth=1)
-    # Median line
-    plt.axvline(np.median(lengths), color='#d95f02', linestyle='solid', linewidth=2)
-    plt.title(f"Histogram of {type_of_lengths} length of {language}")
-    plt.savefig(fp)
-    plt.show()
-    plt.close()
-
-
 def compare_en_de_texts(document: Dict):
 
     en_ref = ""
@@ -127,12 +101,6 @@ def compare_en_de_texts(document: Dict):
 
 
 if __name__ == '__main__':
-    # Set correct font size for plots
-    matplotlib.rc('xtick', labelsize=18)
-    matplotlib.rc('ytick', labelsize=18)
-    # set LaTeX font
-    matplotlib.rcParams['mathtext.fontset'] = 'stix'
-    matplotlib.rcParams['font.family'] = 'STIXGeneral'
 
     # Reference time to compare number of available articles
     print(f"Started at {datetime.now().isoformat()}")
@@ -162,7 +130,7 @@ if __name__ == '__main__':
         analyze_text_lengths(response, reference_token_lengths, summary_token_lengths, compression_ratios)
 
     # use the final batch to compare a sample reference and summary
-    compare_en_de_texts(response)
+    # compare_en_de_texts(response)
 
     language_distribution = Counter(languages_with_non_empty_docs)
     x_label = []
