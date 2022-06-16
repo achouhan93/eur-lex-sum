@@ -113,6 +113,10 @@ def get_valid_keys_for_language(samples, language) -> List[str]:
 
 
 def initial_analysis(samples):
+    # Print quick distribution
+    count_total_number_instances(samples)
+    num_test_set_samples = sum([sample["for_test_set"] for sample in samples])
+    print(f"{num_test_set_samples} samples are suitable for usage in the validation/test set.")
     # For now only compute stats for English
     reference_texts = []
     summary_texts = []
@@ -282,13 +286,11 @@ if __name__ == '__main__':
         with open("all_valid_celex_ids.json", "w") as f:
             json.dump(all_celex_ids_until_1990, f, indent=2)
 
-    # Print quick distribution
-    count_total_number_instances(data)
-    num_test_set_samples = sum([sample["for_test_set"] for sample in data])
-    print(f"{num_test_set_samples} samples are suitable for usage in the validation/test set.")
-    print(f"That is out of a total number of {len(data)} distinct samples.")
+    print(f"The dataset has {len(data)} distinct legal acts.")
 
     lang_samples, validation_test_keys = identify_lang_ids(data, langs)
+    total_num_samples = [len(lang) for _, lang in lang_samples.items()]
+    print(f"Total number of instances: {sum(total_num_samples)}")
 
     # Iterate over samples to identify which cause issues
     # verify_samples(data, validation_test_keys, lang_samples)
@@ -299,8 +301,11 @@ if __name__ == '__main__':
 
     validation_set = validation_test_keys[:len(validation_test_keys) // 2]
     test_set = validation_test_keys[len(validation_test_keys) // 2:]
+    print(f"{len(validation_set)} validation samples")
+    print(f"{len(test_set)} test samples.")
 
     clean_data = {}
+    # Assign samples into correct split based on ID selection
     for language in tqdm(langs):
         # Separate the ids into each of the corresponding sets.
         clean_data[language] = {"train": {}, "validation": {}, "test": {}}

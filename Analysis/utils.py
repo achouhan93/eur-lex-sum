@@ -1,8 +1,17 @@
-from typing import List, Dict, Union
+from typing import List, Union, Optional, Tuple
 import regex
 
 from tqdm import tqdm
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Set correct font size for plots
+matplotlib.rc('xtick', labelsize=18)
+matplotlib.rc('ytick', labelsize=18)
+# set LaTeX font
+matplotlib.rcParams['mathtext.fontset'] = 'stix'
+matplotlib.rcParams['font.family'] = 'STIXGeneral'
 
 
 def clean_text(text: str) -> str:
@@ -150,3 +159,32 @@ def identify_duplicates_by_equality(celex_ids, summary_texts, summary_token_leng
                 duplicated_summaries.add(celex_id)
 
     print(f"{len(duplicated_summaries)} texts are affected by duplicated summaries.")
+
+
+def histogram_plot(lengths: List[Union[int, float]],
+                   language: str,
+                   type_of_lengths: str,
+                   xlim: Optional[Union[List, Tuple]] = (0, 20000),
+                   ylim: Optional[Union[List, Tuple]] = (0, 150),
+                   bins: int = 20,
+                   fp: str = "./Insights/histogram.png"
+                   ):
+    plt.hist(lengths, range=xlim, bins=bins, color='#1b9e77')
+    plt.xlim(xlim)
+    plt.ylim(ylim)
+
+    # Mean and std lines
+    plt.axvline(np.mean(lengths), color='k', linestyle='dashed', linewidth=2)
+    plt.axvline(np.mean(lengths) - np.std(lengths), color='k', linestyle='dotted', linewidth=1)
+    plt.axvline(np.mean(lengths) + np.std(lengths), color='k', linestyle='dotted', linewidth=1)
+    # Median line
+    plt.axvline(np.median(lengths), color='#d95f02', linestyle='solid', linewidth=2)
+
+    # Title and save
+    # plt.xlabel(f"{type_of_lengths}")
+    # plt.ylabel(f"Frequency")
+    # plt.locator_params(axis='x', nbins=8)
+    # plt.title(f"Histogram of {type_of_lengths} length for the subset of {language} articles.")
+    plt.savefig(fp, dpi=300)
+    plt.show()
+    plt.close()
