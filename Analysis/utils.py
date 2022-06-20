@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 # Set correct font size for plots
 matplotlib.rc('xtick', labelsize=18)
 matplotlib.rc('ytick', labelsize=18)
+matplotlib.rc('legend', fontsize=18)
 # set LaTeX font
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
 matplotlib.rcParams['font.family'] = 'STIXGeneral'
