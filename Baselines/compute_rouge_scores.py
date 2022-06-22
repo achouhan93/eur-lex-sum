@@ -64,6 +64,6 @@ if __name__ == "__main__":
             gold_dir = os.path.join("./gold/", language, split)
             evaluate_directory(aggregator, scorer, pred_dir=pred_dir, gold_dir=gold_dir)
             print("\n------------------------------------")
-            print("Results for Lead-3 baseline:")
+            print(f"  Results for {language} {split}")
             result = aggregator.aggregate()
             print_aggregate(result)
