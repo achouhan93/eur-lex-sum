@@ -1,0 +1,886 @@
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ ls
+LexRank.py   gold                  paragraph
+__pycache__  lexrank_baselines.py  tmux-client-37474.log
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3^C
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ less tmux-client-37474.log
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ rm tmux-client-37474.log
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3 ^C
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ git pull
+remote: Enumerating objects: 63, done.
+remote: Counting objects: 100% (50/50), done.
+remote: Compressing objects: 100% (25/25), done.
+remote: Total 63 (delta 27), reused 45 (delta 25), pack-reused 13
+Unpacking objects: 100% (63/63), done.
+From ssh://git-dbs.ifi.uni-heidelberg.de:2222/papers/2022-eur-lex-sum
+   7091abf..ae4f503  master     -> origin/master
+Updating 7091abf..ae4f503
+Fast-forward
+ Code/Analysis/Insights/final_stats.txt       | 375 ++++++++++++++++++++++++++
+ Code/Analysis/compute_final_offline_stats.py |  86 +++++-
+ custom.bib                                   | 113 +++++++-
+ sample_summary.png                           | Bin 0 -> 241089 bytes
+ summarization.tex                            | 378 +++++++++++++--------------
+ 5 files changed, 745 insertions(+), 207 deletions(-)
+ create mode 100644 Code/Analysis/Insights/final_stats.txt
+ create mode 100644 sample_summary.png
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3
+LexRank.py            gold/                 paragraph/
+__pycache__/          lexrank_baselines.py
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3 git pull^C
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ git pull
+Already up to date.
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ git pull
+Already up to date.
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ ls
+LexRank.py  __pycache__  gold  lexrank_baselines.py  paragraph
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ git pull
+remote: Enumerating objects: 19, done.
+remote: Counting objects: 100% (17/17), done.
+remote: Compressing objects: 100% (11/11), done.
+remote: Total 11 (delta 5), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (11/11), done.
+From ssh://git-dbs.ifi.uni-heidelberg.de:2222/papers/2022-eur-lex-sum
+   ae4f503..ccb5d86  master     -> origin/master
+Updating ae4f503..ccb5d86
+Fast-forward
+ Code/Baselines/compute_rouge_scores.py | 69 ++++++++++++++++++++++++++
+ summarization.tex                      | 91 ++++++++++++++++++----------------
+ 2 files changed, 117 insertions(+), 43 deletions(-)
+ create mode 100644 Code/Baselines/compute_rouge_scores.py
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3 compute_rouge_scores.py
+^CTraceback (most recent call last):
+  File "/home/daumiller/2022-cross-lingual-summ/Code/Baselines/compute_rouge_scores.py", line 65, in <module>
+    evaluate_directory(aggregator, scorer, pred_dir=pred_dir, gold_dir=gold_dir)
+  File "/home/daumiller/2022-cross-lingual-summ/Code/Baselines/compute_rouge_scores.py", line 30, in evaluate_dire
+ctory
+    aggregator.add_scores(scorer.score(gold, pred))
+  File "/home/daumiller/anaconda3/lib/python3.9/site-packages/rouge_score/rouge_scorer.py", line 95, in score
+    scores = _score_lcs(target_tokens, prediction_tokens)
+  File "/home/daumiller/anaconda3/lib/python3.9/site-packages/rouge_score/rouge_scorer.py", line 155, in _score_lc
+s
+    lcs_table = _lcs_table(target_tokens, prediction_tokens)
+  File "/home/daumiller/anaconda3/lib/python3.9/site-packages/rouge_score/rouge_scorer.py", line 175, in _lcs_tabl
+e
+    lcs_table[i][j] = max(lcs_table[i - 1][j], lcs_table[i][j - 1])
+KeyboardInterrupt
+
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ ^C
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ python3 compute_rouge_scores.py
+
+------------------------------------
+  Results for english validation
+----------------rouge1 ---------------------
+Precision | low: 15.67, mid: 17.08, high: 18.50
+Recall    | low: 74.23, mid: 75.92, high: 77.47
+F1        | low: 24.32, mid: 25.99, high: 27.66
+----------------rouge2 ---------------------
+Precision | low:  7.93, mid:  8.69, high:  9.40
+Recall    | low: 38.26, mid: 39.74, high: 41.24
+F1        | low: 12.39, mid: 13.34, high: 14.26
+----------------rougeL ---------------------
+Precision | low:  8.02, mid:  8.71, high:  9.44
+Recall    | low: 38.77, mid: 39.97, high: 41.09
+F1        | low: 12.48, mid: 13.30, high: 14.11
+----------------------------------------
+25.99 & 13.34 & 13.30 &
+
+------------------------------------
+  Results for english test
+----------------rouge1 ---------------------
+Precision | low: 16.25, mid: 18.02, high: 19.91
+Recall    | low: 73.89, mid: 75.53, high: 77.12
+F1        | low: 24.71, mid: 26.68, high: 28.73
+----------------rouge2 ---------------------
+Precision | low:  8.27, mid:  9.20, high: 10.18
+Recall    | low: 38.00, mid: 39.52, high: 40.88
+F1        | low: 12.54, mid: 13.65, high: 14.80
+----------------rougeL ---------------------
+Precision | low:  8.27, mid:  9.08, high:  9.93
+Recall    | low: 38.58, mid: 39.88, high: 41.23
+F1        | low: 12.62, mid: 13.58, high: 14.52
+----------------------------------------
+26.68 & 13.65 & 13.58 &
+
+------------------------------------
+  Results for french validation
+----------------rouge1 ---------------------
+Precision | low: 20.94, mid: 22.65, high: 24.53
+Recall    | low: 76.42, mid: 78.11, high: 79.56
+F1        | low: 30.29, mid: 32.18, high: 34.16
+----------------rouge2 ---------------------
+Precision | low: 11.52, mid: 12.50, high: 13.59
+Recall    | low: 43.49, mid: 45.27, high: 46.88
+F1        | low: 16.90, mid: 18.03, high: 19.18
+----------------rougeL ---------------------
+Precision | low:  9.81, mid: 10.58, high: 11.46
+Recall    | low: 37.35, mid: 38.62, high: 39.90
+F1        | low: 14.38, mid: 15.15, high: 15.95
+----------------------------------------
+32.18 & 18.03 & 15.15 &
+
+------------------------------------
+  Results for french test
+----------------rouge1 ---------------------
+Precision | low: 21.65, mid: 23.93, high: 26.52
+Recall    | low: 74.67, mid: 76.88, high: 78.82
+F1        | low: 30.14, mid: 32.35, high: 34.64
+----------------rouge2 ---------------------
+Precision | low: 11.99, mid: 13.37, high: 14.85
+Recall    | low: 42.57, mid: 44.61, high: 46.36
+F1        | low: 16.75, mid: 18.00, high: 19.24
+----------------rougeL ---------------------
+Precision | low: 10.19, mid: 11.26, high: 12.64
+Recall    | low: 37.05, mid: 38.54, high: 40.03
+F1        | low: 14.32, mid: 15.16, high: 16.06
+----------------------------------------
+32.35 & 18.00 & 15.16 &
+
+------------------------------------
+  Results for german validation
+----------------rouge1 ---------------------
+Precision | low: 15.79, mid: 17.13, high: 18.54
+Recall    | low: 72.72, mid: 74.21, high: 75.63
+F1        | low: 24.45, mid: 26.00, high: 27.66
+----------------rouge2 ---------------------
+Precision | low:  7.84, mid:  8.55, high:  9.25
+Recall    | low: 36.69, mid: 38.20, high: 39.81
+F1        | low: 12.24, mid: 13.12, high: 14.06
+----------------rougeL ---------------------
+Precision | low:  7.44, mid:  8.01, high:  8.65
+Recall    | low: 34.90, mid: 36.09, high: 37.23
+F1        | low: 11.55, mid: 12.24, high: 13.00
+----------------------------------------
+26.00 & 13.12 & 12.24 &
+
+------------------------------------
+  Results for german test
+----------------rouge1 ---------------------
+Precision | low: 17.04, mid: 18.89, high: 20.99
+Recall    | low: 71.19, mid: 73.15, high: 74.95
+F1        | low: 24.70, mid: 26.72, high: 28.64
+----------------rouge2 ---------------------
+Precision | low:  8.67, mid:  9.81, high: 11.28
+Recall    | low: 36.84, mid: 38.52, high: 40.17
+F1        | low: 12.67, mid: 13.75, high: 14.91
+----------------rougeL ---------------------
+Precision | low:  7.94, mid:  8.97, high: 10.36
+Recall    | low: 34.58, mid: 36.09, high: 37.46
+F1        | low: 11.65, mid: 12.56, high: 13.41
+----------------------------------------
+26.72 & 13.75 & 12.56 &
+
+------------------------------------
+  Results for spanish validation
+----------------rouge1 ---------------------
+Precision | low: 16.20, mid: 17.75, high: 19.55
+Recall    | low: 77.93, mid: 79.72, high: 81.17
+F1        | low: 25.23, mid: 27.04, high: 29.02
+----------------rouge2 ---------------------
+Precision | low:  9.73, mid: 10.67, high: 11.55
+Recall    | low: 47.80, mid: 49.65, high: 51.13
+F1        | low: 15.24, mid: 16.43, high: 17.57
+----------------rougeL ---------------------
+Precision | low:  8.83, mid:  9.61, high: 10.43
+Recall    | low: 44.07, mid: 45.26, high: 46.56
+F1        | low: 13.85, mid: 14.75, high: 15.65
+----------------------------------------
+27.04 & 16.43 & 14.75 &
+
+------------------------------------
+  Results for spanish test
+----------------rouge1 ---------------------
+Precision | low: 17.80, mid: 19.81, high: 21.95
+Recall    | low: 77.80, mid: 79.58, high: 81.02
+F1        | low: 26.27, mid: 28.34, high: 30.65
+----------------rouge2 ---------------------
+Precision | low: 10.65, mid: 12.05, high: 13.63
+Recall    | low: 48.02, mid: 49.80, high: 51.49
+F1        | low: 15.76, mid: 17.12, high: 18.53
+----------------rougeL ---------------------
+Precision | low:  9.58, mid: 10.71, high: 12.07
+Recall    | low: 44.11, mid: 45.53, high: 46.96
+F1        | low: 14.28, mid: 15.23, high: 16.28
+----------------------------------------
+28.34 & 17.12 & 15.23 &
+
+------------------------------------
+  Results for italian validation
+----------------rouge1 ---------------------
+Precision | low: 16.80, mid: 18.33, high: 20.04
+Recall    | low: 74.15, mid: 75.95, high: 77.54
+F1        | low: 25.55, mid: 27.29, high: 29.13
+----------------rouge2 ---------------------
+Precision | low:  8.59, mid:  9.32, high: 10.06
+Recall    | low: 38.22, mid: 39.98, high: 41.63
+F1        | low: 13.11, mid: 14.01, high: 14.96
+----------------rougeL ---------------------
+Precision | low:  7.78, mid:  8.47, high:  9.20
+Recall    | low: 35.27, mid: 36.50, high: 37.67
+F1        | low: 11.84, mid: 12.63, high: 13.36
+----------------------------------------
+27.29 & 14.01 & 12.63 &
+
+------------------------------------
+  Results for italian test
+----------------rouge1 ---------------------
+Precision | low: 18.41, mid: 20.46, high: 22.57
+Recall    | low: 72.60, mid: 74.72, high: 76.53
+F1        | low: 26.51, mid: 28.57, high: 30.78
+----------------rouge2 ---------------------
+Precision | low:  9.03, mid: 10.28, high: 11.77
+Recall    | low: 37.00, mid: 38.76, high: 40.46
+F1        | low: 13.06, mid: 14.24, high: 15.37
+----------------rougeL ---------------------
+Precision | low:  8.33, mid:  9.37, high: 10.80
+Recall    | low: 34.62, mid: 35.97, high: 37.32
+F1        | low: 12.05, mid: 12.90, high: 13.77
+----------------------------------------
+28.57 & 14.24 & 12.90 &
+
+------------------------------------
+  Results for portuguese validation
+----------------rouge1 ---------------------
+Precision | low: 18.79, mid: 20.73, high: 22.59
+Recall    | low: 76.85, mid: 78.66, high: 80.29
+F1        | low: 28.04, mid: 30.12, high: 32.05
+----------------rouge2 ---------------------
+Precision | low: 10.69, mid: 11.69, high: 12.80
+Recall    | low: 44.57, mid: 46.37, high: 48.09
+F1        | low: 16.06, mid: 17.17, high: 18.32
+----------------rougeL ---------------------
+Precision | low:  9.46, mid: 10.28, high: 11.13
+Recall    | low: 40.15, mid: 41.35, high: 42.71
+F1        | low: 14.26, mid: 15.08, high: 15.94
+----------------------------------------
+30.12 & 17.17 & 15.08 &
+
+------------------------------------
+  Results for portuguese test
+----------------rouge1 ---------------------
+Precision | low: 19.93, mid: 22.19, high: 24.49
+Recall    | low: 75.77, mid: 77.75, high: 79.35
+F1        | low: 28.28, mid: 30.67, high: 32.92
+----------------rouge2 ---------------------
+Precision | low: 11.02, mid: 12.43, high: 14.10
+Recall    | low: 43.74, mid: 45.56, high: 47.54
+F1        | low: 15.94, mid: 17.20, high: 18.51
+----------------rougeL ---------------------
+Precision | low:  9.92, mid: 11.05, high: 12.50
+Recall    | low: 39.43, mid: 41.00, high: 42.51
+F1        | low: 14.30, mid: 15.20, high: 16.15
+----------------------------------------
+30.67 & 17.20 & 15.20 &
+
+------------------------------------
+  Results for greek validation
+----------------rouge1 ---------------------
+Precision | low: 17.35, mid: 18.99, high: 20.76
+Recall    | low: 44.88, mid: 47.94, high: 50.79
+F1        | low: 22.63, mid: 24.42, high: 26.30
+----------------rouge2 ---------------------
+Precision | low:  6.39, mid:  7.42, high:  8.56
+Recall    | low: 17.41, mid: 19.65, high: 22.11
+F1        | low:  8.53, mid:  9.77, high: 11.09
+----------------rougeL ---------------------
+Precision | low: 10.87, mid: 11.99, high: 13.16
+Recall    | low: 28.81, mid: 31.01, high: 33.31
+F1        | low: 14.30, mid: 15.46, high: 16.60
+----------------------------------------
+24.42 & 9.77 & 15.46 &
+
+------------------------------------
+  Results for greek test
+----------------rouge1 ---------------------
+Precision | low: 18.98, mid: 20.79, high: 22.95
+Recall    | low: 43.70, mid: 46.66, high: 49.48
+F1        | low: 23.22, mid: 24.79, high: 26.74
+----------------rouge2 ---------------------
+Precision | low:  6.72, mid:  7.79, high:  8.92
+Recall    | low: 15.61, mid: 17.58, high: 19.71
+F1        | low:  8.26, mid:  9.45, high: 10.61
+----------------rougeL ---------------------
+Precision | low: 11.82, mid: 12.94, high: 14.20
+Recall    | low: 27.71, mid: 29.62, high: 31.60
+F1        | low: 14.38, mid: 15.46, high: 16.61
+----------------------------------------
+24.79 & 9.45 & 15.46 &
+
+------------------------------------
+  Results for dutch validation
+----------------rouge1 ---------------------
+Precision | low: 18.28, mid: 19.86, high: 21.74
+Recall    | low: 72.73, mid: 74.49, high: 76.06
+F1        | low: 27.27, mid: 29.07, high: 31.02
+----------------rouge2 ---------------------
+Precision | low:  9.23, mid: 10.14, high: 11.11
+Recall    | low: 37.28, mid: 38.91, high: 40.37
+F1        | low: 13.86, mid: 14.92, high: 15.99
+----------------rougeL ---------------------
+Precision | low:  9.19, mid: 10.00, high: 10.78
+Recall    | low: 37.57, mid: 38.80, high: 39.98
+F1        | low: 13.78, mid: 14.66, high: 15.46
+----------------------------------------
+29.07 & 14.92 & 14.66 &
+
+------------------------------------
+  Results for dutch test
+----------------rouge1 ---------------------
+Precision | low: 19.25, mid: 21.33, high: 23.72
+Recall    | low: 70.73, mid: 72.75, high: 74.63
+F1        | low: 27.46, mid: 29.62, high: 31.96
+----------------rouge2 ---------------------
+Precision | low:  9.51, mid: 10.53, high: 11.58
+Recall    | low: 35.76, mid: 37.49, high: 39.17
+F1        | low: 13.71, mid: 14.76, high: 15.87
+----------------rougeL ---------------------
+Precision | low:  9.50, mid: 10.49, high: 11.50
+Recall    | low: 36.71, mid: 38.09, high: 39.61
+F1        | low: 13.74, mid: 14.73, high: 15.73
+----------------------------------------
+29.62 & 14.76 & 14.73 &
+
+------------------------------------
+  Results for danish validation
+----------------rouge1 ---------------------
+Precision | low: 18.45, mid: 19.92, high: 21.67
+Recall    | low: 70.63, mid: 72.37, high: 73.99
+F1        | low: 27.09, mid: 28.78, high: 30.70
+----------------rouge2 ---------------------
+Precision | low:  8.71, mid:  9.48, high: 10.28
+Recall    | low: 34.23, mid: 35.84, high: 37.46
+F1        | low: 12.92, mid: 13.90, high: 14.85
+----------------rougeL ---------------------
+Precision | low:  8.40, mid:  9.06, high:  9.82
+Recall    | low: 33.03, mid: 34.30, high: 35.52
+F1        | low: 12.39, mid: 13.14, high: 13.94
+----------------------------------------
+28.78 & 13.90 & 13.14 &
+
+------------------------------------
+  Results for danish test
+----------------rouge1 ---------------------
+Precision | low: 18.90, mid: 20.94, high: 23.05
+Recall    | low: 69.13, mid: 71.08, high: 72.96
+F1        | low: 27.09, mid: 29.22, high: 31.31
+----------------rouge2 ---------------------
+Precision | low:  8.82, mid:  9.85, high: 10.95
+Recall    | low: 33.01, mid: 34.85, high: 36.44
+F1        | low: 12.76, mid: 13.86, high: 15.07
+----------------rougeL ---------------------
+Precision | low:  8.52, mid:  9.32, high: 10.28
+Recall    | low: 32.53, mid: 33.96, high: 35.26
+F1        | low: 12.34, mid: 13.19, high: 14.16
+----------------------------------------
+29.22 & 13.86 & 13.19 &
+
+------------------------------------
+  Results for finnish validation
+----------------rouge1 ---------------------
+Precision | low: 17.02, mid: 18.48, high: 20.05
+Recall    | low: 59.79, mid: 61.60, high: 63.30
+F1        | low: 24.75, mid: 26.40, high: 28.09
+----------------rouge2 ---------------------
+Precision | low:  7.57, mid:  8.30, high:  9.08
+Recall    | low: 26.37, mid: 27.79, high: 29.30
+F1        | low: 11.03, mid: 11.88, high: 12.76
+----------------rougeL ---------------------
+Precision | low:  7.63, mid:  8.30, high:  9.05
+Recall    | low: 27.07, mid: 28.16, high: 29.31
+F1        | low: 11.14, mid: 11.87, high: 12.59
+----------------------------------------
+26.40 & 11.88 & 11.87 &
+
+------------------------------------
+  Results for finnish test
+----------------rouge1 ---------------------
+Precision | low: 18.24, mid: 20.05, high: 22.12
+Recall    | low: 57.74, mid: 59.73, high: 61.56
+F1        | low: 24.68, mid: 26.49, high: 28.27
+----------------rouge2 ---------------------
+Precision | low:  7.93, mid:  9.07, high: 10.59
+Recall    | low: 25.05, mid: 26.38, high: 27.72
+F1        | low: 10.77, mid: 11.68, high: 12.66
+----------------rougeL ---------------------
+Precision | low:  8.10, mid:  9.07, high: 10.39
+Recall    | low: 26.29, mid: 27.42, high: 28.57
+F1        | low: 11.08, mid: 11.80, high: 12.59
+----------------------------------------
+26.49 & 11.68 & 11.80 &
+
+------------------------------------
+  Results for swedish validation
+----------------rouge1 ---------------------
+Precision | low: 19.38, mid: 21.06, high: 22.89
+Recall    | low: 71.95, mid: 73.66, high: 75.23
+F1        | low: 28.33, mid: 30.25, high: 32.13
+----------------rouge2 ---------------------
+Precision | low:  9.75, mid: 10.56, high: 11.47
+Recall    | low: 37.08, mid: 38.70, high: 40.30
+F1        | low: 14.42, mid: 15.40, high: 16.42
+----------------rougeL ---------------------
+Precision | low:  9.12, mid:  9.83, high: 10.57
+Recall    | low: 35.20, mid: 36.46, high: 37.68
+F1        | low: 13.52, mid: 14.27, high: 15.06
+----------------------------------------
+30.25 & 15.40 & 14.27 &
+
+------------------------------------
+  Results for swedish test
+----------------rouge1 ---------------------
+Precision | low: 20.31, mid: 22.67, high: 25.14
+Recall    | low: 70.46, mid: 72.58, high: 74.21
+F1        | low: 28.52, mid: 30.67, high: 32.93
+----------------rouge2 ---------------------
+Precision | low: 10.35, mid: 11.58, high: 13.13
+Recall    | low: 36.15, mid: 37.75, high: 39.36
+F1        | low: 14.35, mid: 15.47, high: 16.63
+----------------rougeL ---------------------
+Precision | low:  9.65, mid: 10.67, high: 12.08
+Recall    | low: 34.53, mid: 35.88, high: 37.13
+F1        | low: 13.49, mid: 14.35, high: 15.24
+----------------------------------------
+30.67 & 15.47 & 14.35 &
+
+------------------------------------
+  Results for romanian validation
+----------------rouge1 ---------------------
+Precision | low: 26.21, mid: 28.24, high: 30.45
+Recall    | low: 62.21, mid: 64.32, high: 66.24
+F1        | low: 33.96, mid: 35.69, high: 37.56
+----------------rouge2 ---------------------
+Precision | low: 11.64, mid: 12.65, high: 13.72
+Recall    | low: 28.12, mid: 29.64, high: 31.09
+F1        | low: 15.11, mid: 16.08, high: 17.10
+----------------rougeL ---------------------
+Precision | low: 10.94, mid: 11.87, high: 12.86
+Recall    | low: 26.47, mid: 27.60, high: 28.81
+F1        | low: 14.15, mid: 14.90, high: 15.63
+----------------------------------------
+35.69 & 16.08 & 14.90 &
+
+------------------------------------
+  Results for romanian test
+----------------rouge1 ---------------------
+Precision | low: 26.69, mid: 28.96, high: 31.28
+Recall    | low: 60.01, mid: 62.21, high: 64.27
+F1        | low: 32.96, mid: 34.75, high: 36.49
+----------------rouge2 ---------------------
+Precision | low: 11.34, mid: 12.41, high: 13.54
+Recall    | low: 26.34, mid: 27.88, high: 29.56
+F1        | low: 14.14, mid: 15.16, high: 16.20
+----------------rougeL ---------------------
+Precision | low: 11.24, mid: 12.17, high: 13.15
+Recall    | low: 25.73, mid: 26.93, high: 28.25
+F1        | low: 13.87, mid: 14.59, high: 15.36
+----------------------------------------
+34.75 & 15.16 & 14.59 &
+
+------------------------------------
+  Results for hungarian validation
+----------------rouge1 ---------------------
+Precision | low: 21.93, mid: 23.87, high: 25.84
+Recall    | low: 75.92, mid: 77.89, high: 79.61
+F1        | low: 31.71, mid: 33.71, high: 35.80
+----------------rouge2 ---------------------
+Precision | low: 12.57, mid: 13.59, high: 14.70
+Recall    | low: 44.51, mid: 46.44, high: 48.05
+F1        | low: 18.35, mid: 19.53, high: 20.73
+----------------rougeL ---------------------
+Precision | low: 10.06, mid: 10.90, high: 11.76
+Recall    | low: 36.10, mid: 37.43, high: 38.78
+F1        | low: 14.63, mid: 15.49, high: 16.32
+----------------------------------------
+33.71 & 19.53 & 15.49 &
+
+------------------------------------
+  Results for hungarian test
+----------------rouge1 ---------------------
+Precision | low: 23.28, mid: 25.60, high: 28.08
+Recall    | low: 75.60, mid: 77.49, high: 79.21
+F1        | low: 32.16, mid: 34.55, high: 36.94
+----------------rouge2 ---------------------
+Precision | low: 12.98, mid: 14.32, high: 15.67
+Recall    | low: 44.22, mid: 46.22, high: 48.04
+F1        | low: 18.38, mid: 19.69, high: 21.11
+----------------rougeL ---------------------
+Precision | low: 10.50, mid: 11.43, high: 12.27
+Recall    | low: 35.91, mid: 37.43, high: 38.96
+F1        | low: 14.78, mid: 15.64, high: 16.45
+----------------------------------------
+34.55 & 19.69 & 15.64 &
+
+------------------------------------
+  Results for czech validation
+----------------rouge1 ---------------------
+Precision | low: 19.57, mid: 21.40, high: 23.36
+Recall    | low: 76.64, mid: 78.49, high: 80.03
+F1        | low: 28.95, mid: 30.96, high: 32.96
+----------------rouge2 ---------------------
+Precision | low: 10.41, mid: 11.36, high: 12.36
+Recall    | low: 41.59, mid: 43.40, high: 45.20
+F1        | low: 15.54, mid: 16.65, high: 17.75
+----------------rougeL ---------------------
+Precision | low:  8.92, mid:  9.75, high: 10.51
+Recall    | low: 36.15, mid: 37.51, high: 38.71
+F1        | low: 13.34, mid: 14.16, high: 14.92
+----------------------------------------
+30.96 & 16.65 & 14.16 &
+
+------------------------------------
+  Results for czech test
+----------------rouge1 ---------------------
+Precision | low: 20.76, mid: 22.85, high: 25.00
+Recall    | low: 75.97, mid: 77.85, high: 79.54
+F1        | low: 29.72, mid: 31.86, high: 34.24
+----------------rouge2 ---------------------
+Precision | low: 10.72, mid: 11.82, high: 12.99
+Recall    | low: 41.20, mid: 42.86, high: 44.58
+F1        | low: 15.56, mid: 16.76, high: 17.99
+----------------rougeL ---------------------
+Precision | low:  9.27, mid: 10.10, high: 10.95
+Recall    | low: 36.14, mid: 37.50, high: 39.04
+F1        | low: 13.48, mid: 14.32, high: 15.22
+----------------------------------------
+31.86 & 16.76 & 14.32 &
+
+------------------------------------
+  Results for polish validation
+----------------rouge1 ---------------------
+Precision | low: 18.22, mid: 19.80, high: 21.45
+Recall    | low: 68.57, mid: 70.62, high: 72.31
+F1        | low: 26.72, mid: 28.47, high: 30.21
+----------------rouge2 ---------------------
+Precision | low:  9.09, mid:  9.99, high: 10.99
+Recall    | low: 34.37, mid: 36.13, high: 37.85
+F1        | low: 13.41, mid: 14.42, high: 15.52
+----------------rougeL ---------------------
+Precision | low:  8.14, mid:  8.88, high:  9.75
+Recall    | low: 30.96, mid: 32.10, high: 33.26
+F1        | low: 11.95, mid: 12.68, high: 13.51
+----------------------------------------
+28.47 & 14.42 & 12.68 &
+
+------------------------------------
+  Results for polish test
+----------------rouge1 ---------------------
+Precision | low: 18.97, mid: 20.83, high: 22.79
+Recall    | low: 67.29, mid: 69.48, high: 71.31
+F1        | low: 26.96, mid: 28.88, high: 30.85
+----------------rouge2 ---------------------
+Precision | low:  9.36, mid: 10.30, high: 11.48
+Recall    | low: 33.63, mid: 35.35, high: 37.12
+F1        | low: 13.35, mid: 14.42, high: 15.61
+----------------rougeL ---------------------
+Precision | low:  8.30, mid:  9.08, high:  9.91
+Recall    | low: 30.53, mid: 31.86, high: 33.27
+F1        | low: 11.93, mid: 12.73, high: 13.57
+----------------------------------------
+28.88 & 14.42 & 12.73 &
+
+------------------------------------
+  Results for lithuanian validation
+----------------rouge1 ---------------------
+Precision | low: 17.02, mid: 18.52, high: 19.90
+Recall    | low: 64.53, mid: 66.52, high: 68.53
+F1        | low: 25.14, mid: 26.79, high: 28.43
+----------------rouge2 ---------------------
+Precision | low:  7.77, mid:  8.56, high:  9.32
+Recall    | low: 29.42, mid: 30.99, high: 32.40
+F1        | low: 11.53, mid: 12.43, high: 13.38
+----------------rougeL ---------------------
+Precision | low:  7.25, mid:  7.88, high:  8.53
+Recall    | low: 27.85, mid: 28.98, high: 30.08
+F1        | low: 10.71, mid: 11.44, high: 12.14
+----------------------------------------
+26.79 & 12.43 & 11.44 &
+
+------------------------------------
+  Results for lithuanian test
+----------------rouge1 ---------------------
+Precision | low: 17.88, mid: 19.67, high: 21.58
+Recall    | low: 63.09, mid: 65.24, high: 67.34
+F1        | low: 25.03, mid: 26.76, high: 28.52
+----------------rouge2 ---------------------
+Precision | low:  8.26, mid:  9.39, high: 10.74
+Recall    | low: 28.84, mid: 30.41, high: 31.97
+F1        | low: 11.56, mid: 12.45, high: 13.60
+----------------rougeL ---------------------
+Precision | low:  7.72, mid:  8.73, high: 10.12
+Recall    | low: 27.57, mid: 28.93, high: 30.21
+F1        | low: 10.84, mid: 11.59, high: 12.44
+----------------------------------------
+26.76 & 12.45 & 11.59 &
+
+------------------------------------
+  Results for slovenian validation
+----------------rouge1 ---------------------
+Precision | low: 16.82, mid: 18.37, high: 20.06
+Recall    | low: 66.06, mid: 67.91, high: 69.79
+F1        | low: 25.02, mid: 26.75, high: 28.46
+----------------rouge2 ---------------------
+Precision | low:  7.64, mid:  8.36, high:  9.15
+Recall    | low: 29.95, mid: 31.54, high: 33.22
+F1        | low: 11.40, mid: 12.25, high: 13.15
+----------------rougeL ---------------------
+Precision | low:  7.35, mid:  8.01, high:  8.69
+Recall    | low: 29.05, mid: 30.16, high: 31.28
+F1        | low: 10.95, mid: 11.64, high: 12.37
+----------------------------------------
+26.75 & 12.25 & 11.64 &
+
+------------------------------------
+  Results for slovenian test
+----------------rouge1 ---------------------
+Precision | low: 18.04, mid: 19.95, high: 21.90
+Recall    | low: 64.66, mid: 66.75, high: 68.51
+F1        | low: 25.47, mid: 27.19, high: 29.08
+----------------rouge2 ---------------------
+Precision | low:  8.04, mid:  9.23, high: 10.64
+Recall    | low: 29.22, mid: 30.62, high: 32.11
+F1        | low: 11.37, mid: 12.34, high: 13.31
+----------------rougeL ---------------------
+Precision | low:  7.84, mid:  8.76, high: 10.06
+Recall    | low: 28.70, mid: 29.86, high: 31.03
+F1        | low: 11.04, mid: 11.79, high: 12.54
+----------------------------------------
+27.19 & 12.34 & 11.79 &
+
+------------------------------------
+  Results for latvian validation
+----------------rouge1 ---------------------
+Precision | low: 20.13, mid: 21.89, high: 23.75
+Recall    | low: 73.64, mid: 75.67, high: 77.51
+F1        | low: 29.33, mid: 31.24, high: 33.24
+----------------rouge2 ---------------------
+Precision | low:  9.87, mid: 10.79, high: 11.64
+Recall    | low: 37.06, mid: 38.84, high: 40.48
+F1        | low: 14.50, mid: 15.55, high: 16.51
+----------------rougeL ---------------------
+Precision | low:  8.37, mid:  9.15, high:  9.95
+Recall    | low: 31.39, mid: 32.70, high: 33.96
+F1        | low: 12.27, mid: 12.99, high: 13.73
+----------------------------------------
+31.24 & 15.55 & 12.99 &
+
+------------------------------------
+  Results for latvian test
+----------------rouge1 ---------------------
+Precision | low: 21.31, mid: 23.62, high: 25.86
+Recall    | low: 72.24, mid: 74.35, high: 76.46
+F1        | low: 29.64, mid: 31.73, high: 33.98
+----------------rouge2 ---------------------
+Precision | low: 10.55, mid: 11.80, high: 13.48
+Recall    | low: 36.52, mid: 38.27, high: 40.05
+F1        | low: 14.62, mid: 15.77, high: 16.98
+----------------rougeL ---------------------
+Precision | low:  8.82, mid:  9.89, high: 11.29
+Recall    | low: 30.92, mid: 32.42, high: 33.81
+F1        | low: 12.28, mid: 13.15, high: 13.97
+----------------------------------------
+31.73 & 15.77 & 13.15 &
+
+------------------------------------
+  Results for bulgarian validation
+----------------rouge1 ---------------------
+Precision | low: 23.16, mid: 25.25, high: 27.59
+Recall    | low: 34.90, mid: 37.50, high: 40.03
+F1        | low: 24.44, mid: 26.36, high: 28.25
+----------------rouge2 ---------------------
+Precision | low:  7.20, mid:  8.41, high:  9.75
+Recall    | low: 11.50, mid: 13.31, high: 15.20
+F1        | low:  7.86, mid:  9.15, high: 10.42
+----------------rougeL ---------------------
+Precision | low: 14.57, mid: 15.95, high: 17.33
+Recall    | low: 22.11, mid: 23.70, high: 25.55
+F1        | low: 15.44, mid: 16.54, high: 17.64
+----------------------------------------
+26.36 & 9.15 & 16.54 &
+
+------------------------------------
+  Results for bulgarian test
+----------------rouge1 ---------------------
+Precision | low: 24.91, mid: 27.28, high: 29.89
+Recall    | low: 32.16, mid: 34.94, high: 37.50
+F1        | low: 23.88, mid: 25.58, high: 27.49
+----------------rouge2 ---------------------
+Precision | low:  7.52, mid:  8.79, high: 10.17
+Recall    | low:  9.64, mid: 11.29, high: 13.04
+F1        | low:  7.27, mid:  8.40, high:  9.66
+----------------rougeL ---------------------
+Precision | low: 15.80, mid: 17.46, high: 19.11
+Recall    | low: 20.30, mid: 21.86, high: 23.60
+F1        | low: 15.13, mid: 16.13, high: 17.16
+----------------------------------------
+25.58 & 8.40 & 16.13 &
+
+------------------------------------
+  Results for estonian validation
+----------------rouge1 ---------------------
+Precision | low: 17.02, mid: 18.57, high: 20.09
+Recall    | low: 59.23, mid: 61.14, high: 62.84
+F1        | low: 24.60, mid: 26.33, high: 27.93
+----------------rouge2 ---------------------
+Precision | low:  7.42, mid:  8.21, high:  9.02
+Recall    | low: 25.60, mid: 27.07, high: 28.41
+F1        | low: 10.74, mid: 11.64, high: 12.58
+----------------rougeL ---------------------
+Precision | low:  7.70, mid:  8.34, high:  9.14
+Recall    | low: 26.93, mid: 27.97, high: 29.08
+F1        | low: 11.15, mid: 11.84, high: 12.64
+----------------------------------------
+26.33 & 11.64 & 11.84 &
+
+------------------------------------
+  Results for estonian test
+----------------rouge1 ---------------------
+Precision | low: 17.80, mid: 19.54, high: 21.34
+Recall    | low: 57.41, mid: 59.35, high: 61.14
+F1        | low: 24.72, mid: 26.39, high: 28.05
+----------------rouge2 ---------------------
+Precision | low:  7.60, mid:  8.41, high:  9.35
+Recall    | low: 24.31, mid: 25.73, high: 27.11
+F1        | low: 10.53, mid: 11.41, high: 12.42
+----------------rougeL ---------------------
+Precision | low:  7.83, mid:  8.53, high:  9.29
+Recall    | low: 25.93, mid: 27.23, high: 28.39
+F1        | low: 10.93, mid: 11.66, high: 12.41
+----------------------------------------
+26.39 & 11.41 & 11.66 &
+
+------------------------------------
+  Results for slovak validation
+----------------rouge1 ---------------------
+Precision | low: 19.56, mid: 21.26, high: 23.08
+Recall    | low: 71.70, mid: 73.70, high: 75.54
+F1        | low: 28.41, mid: 30.30, high: 32.16
+----------------rouge2 ---------------------
+Precision | low:  9.55, mid: 10.45, high: 11.40
+Recall    | low: 35.65, mid: 37.48, high: 39.08
+F1        | low: 14.06, mid: 15.04, high: 16.06
+----------------rougeL ---------------------
+Precision | low:  8.42, mid:  9.22, high:  9.95
+Recall    | low: 31.89, mid: 33.09, high: 34.26
+F1        | low: 12.35, mid: 13.14, high: 13.90
+----------------------------------------
+30.30 & 15.04 & 13.14 &
+
+------------------------------------
+  Results for slovak test
+----------------rouge1 ---------------------
+Precision | low: 20.57, mid: 22.66, high: 24.89
+Recall    | low: 70.18, mid: 72.67, high: 74.59
+F1        | low: 28.60, mid: 30.65, high: 32.80
+----------------rouge2 ---------------------
+Precision | low:  9.90, mid: 11.12, high: 12.54
+Recall    | low: 35.10, mid: 36.79, high: 38.56
+F1        | low: 13.76, mid: 14.94, high: 16.01
+----------------rougeL ---------------------
+Precision | low:  8.89, mid:  9.86, high: 11.19
+Recall    | low: 31.40, mid: 32.79, high: 34.13
+F1        | low: 12.32, mid: 13.14, high: 13.93
+----------------------------------------
+30.65 & 14.94 & 13.14 &
+
+------------------------------------
+  Results for maltese validation
+----------------rouge1 ---------------------
+Precision | low: 18.79, mid: 20.38, high: 22.28
+Recall    | low: 73.42, mid: 74.95, high: 76.48
+F1        | low: 27.87, mid: 29.71, high: 31.69
+----------------rouge2 ---------------------
+Precision | low:  9.09, mid:  9.87, high: 10.68
+Recall    | low: 36.53, mid: 37.95, high: 39.36
+F1        | low: 13.62, mid: 14.55, high: 15.44
+----------------rougeL ---------------------
+Precision | low:  8.06, mid:  8.68, high:  9.42
+Recall    | low: 32.58, mid: 33.68, high: 34.74
+F1        | low: 12.04, mid: 12.73, high: 13.41
+----------------------------------------
+29.71 & 14.55 & 12.73 &
+
+------------------------------------
+  Results for maltese test
+----------------rouge1 ---------------------
+Precision | low: 19.70, mid: 21.70, high: 23.80
+Recall    | low: 73.15, mid: 74.64, high: 76.08
+F1        | low: 28.46, mid: 30.51, high: 32.54
+----------------rouge2 ---------------------
+Precision | low:  9.33, mid: 10.30, high: 11.27
+Recall    | low: 35.97, mid: 37.39, high: 38.80
+F1        | low: 13.62, mid: 14.62, high: 15.58
+----------------rougeL ---------------------
+Precision | low:  8.31, mid:  9.01, high:  9.71
+Recall    | low: 32.59, mid: 33.80, high: 35.05
+F1        | low: 12.20, mid: 12.86, high: 13.56
+----------------------------------------
+30.51 & 14.62 & 12.86 &
+
+------------------------------------
+  Results for croatian validation
+----------------rouge1 ---------------------
+Precision | low: 25.62, mid: 27.74, high: 29.74
+Recall    | low: 53.25, mid: 55.49, high: 57.70
+F1        | low: 31.77, mid: 33.50, high: 35.21
+----------------rouge2 ---------------------
+Precision | low: 10.13, mid: 11.10, high: 12.19
+Recall    | low: 21.03, mid: 22.28, high: 23.53
+F1        | low: 12.54, mid: 13.46, high: 14.45
+----------------rougeL ---------------------
+Precision | low: 10.44, mid: 11.27, high: 12.27
+Recall    | low: 21.68, mid: 22.66, high: 23.69
+F1        | low: 12.79, mid: 13.50, high: 14.20
+----------------------------------------
+33.50 & 13.46 & 13.50 &
+
+------------------------------------
+  Results for croatian test
+----------------rouge1 ---------------------
+Precision | low: 26.36, mid: 28.38, high: 30.57
+Recall    | low: 51.79, mid: 54.04, high: 56.34
+F1        | low: 31.04, mid: 32.64, high: 34.09
+----------------rouge2 ---------------------
+Precision | low: 10.00, mid: 11.10, high: 12.21
+Recall    | low: 20.05, mid: 21.31, high: 22.70
+F1        | low: 11.88, mid: 12.76, high: 13.68
+----------------rougeL ---------------------
+Precision | low: 10.67, mid: 11.60, high: 12.56
+Recall    | low: 21.34, mid: 22.44, high: 23.55
+F1        | low: 12.67, mid: 13.29, high: 13.98
+----------------------------------------
+32.64 & 12.76 & 13.29 &
+
+------------------------------------
+  Results for irish validation
+----------------rouge1 ---------------------
+Precision | low: 35.49, mid: 37.85, high: 40.28
+Recall    | low: 63.20, mid: 65.18, high: 67.06
+F1        | low: 41.89, mid: 43.66, high: 45.57
+----------------rouge2 ---------------------
+Precision | low: 15.04, mid: 15.99, high: 17.08
+Recall    | low: 27.38, mid: 28.72, high: 30.01
+F1        | low: 17.89, mid: 18.72, high: 19.68
+----------------rougeL ---------------------
+Precision | low: 12.88, mid: 13.73, high: 14.71
+Recall    | low: 23.46, mid: 24.45, high: 25.37
+F1        | low: 15.28, mid: 15.86, high: 16.46
+----------------------------------------
+43.66 & 18.72 & 15.86 &
+
+------------------------------------
+  Results for irish test
+----------------rouge1 ---------------------
+Precision | low: 35.99, mid: 38.47, high: 41.17
+Recall    | low: 60.04, mid: 62.33, high: 64.51
+F1        | low: 40.25, mid: 41.93, high: 43.66
+----------------rouge2 ---------------------
+Precision | low: 14.35, mid: 15.53, high: 16.72
+Recall    | low: 25.37, mid: 26.87, high: 28.49
+F1        | low: 16.39, mid: 17.16, high: 17.92
+----------------rougeL ---------------------
+Precision | low: 12.95, mid: 13.97, high: 15.00
+Recall    | low: 22.50, mid: 23.76, high: 25.03
+F1        | low: 14.76, mid: 15.25, high: 15.75
+----------------------------------------
+41.93 & 17.16 & 15.25 &
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$ ^C[6~
+(base) daumiller@eirene:~/2022-cross-lingual-summ/Code/Baselines$
