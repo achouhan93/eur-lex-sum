@@ -70,7 +70,7 @@ translator_pipeline_ga = get_translation_model_and_tokenizer('en', 'ga')
 
 
 def compute_all_crosslingualsummaries():
-    with open("/Users/ashishchouhan/Desktop/Studies/6a. Production_Code/2. Main_University_Heidelberg_GitLab/1. Data Extraction/2022-eur-lex-sum/Code/Analysis/clean_data.pkl", "rb") as f:
+    with open("../Analysis/clean_data.pkl", "rb") as f:
         data = pickle.load(f)
 
     # English Text
