@@ -43,7 +43,7 @@ def get_translation_model_and_tokenizer(src, dst, device=-1):
     """
     model_name = f"Helsinki-NLP/opus-mt-{src}-{dst}"
     task_name = f"translation_{src}_to_{dst}"
-    translator = pipeline(task_name, model=model_name, device=device)
+    translator = pipeline(task_name, model=model_name, device=device, batch_size=4)
     return translator
 
 
@@ -52,7 +52,7 @@ def generate_summary(pipe, text, max_length=4096):
     chunked_document = chunk_by_max_subword_length(cleaned_document, pipe.tokenizer, max_length)
     print(f"Cut document into {len(chunked_document)} chunks.")
     tokenizer_kwargs = {"truncation": True, "max_length": max_length, "return_text": True}
-    summary = pipe(chunked_document, **tokenizer_kwargs)
+    summary = pipe(chunked_document[:2], **tokenizer_kwargs)
     return summary[0]["summary_text"]
 
 
@@ -141,5 +141,5 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 if __name__ == "__main__":
     device = 1
 
-    summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device)
+    summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device, batch_size=4)
     compute_all_crosslingual_summaries(summarization_pipeline, device=device)
