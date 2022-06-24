@@ -142,5 +142,5 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 if __name__ == "__main__":
     device = 1
 
-    summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device, batch_size=4)
+    summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device)
     compute_all_crosslingual_summaries(summarization_pipeline, device=device)
