@@ -136,8 +136,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                             continue
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
-
-                        chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 508)
+                        chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 500)
                         translated_summary = translator_pipeline(chunked_summary)
 
                         out_path = os.path.join("translated", lang, split)
