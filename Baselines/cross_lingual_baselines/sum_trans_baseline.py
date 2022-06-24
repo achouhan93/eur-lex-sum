@@ -1,11 +1,13 @@
 # Summarisation Task
 import torch.cuda
+import os
 import regex
 from tqdm import tqdm
-from transformers import *
+from functools import lru_cache
 import pickle
 
-summarization_pipeline = pipeline('summarization', model="d0r1h/LEDBill", device=-1)
+from transformers import pipeline
+
 
 def get_split_text(text):
     """
@@ -34,136 +36,110 @@ def clean_text(text):
 
 
 # Translation Task
-def get_translation_model_and_tokenizer(src, dst):
+@lru_cache(maxsize=1)
+def get_translation_model_and_tokenizer(src, dst, device=-1):
     """
     Given the source and destination languages, returns the appropriate model
     """
-    # construct our model name
     model_name = f"Helsinki-NLP/opus-mt-{src}-{dst}"
     task_name = f"translation_{src}_to_{dst}"
-    # initialize the tokenizer & model
-    translator = pipeline(task_name, model = model_name, device=-1)
+    translator = pipeline(task_name, model=model_name, device=device)
     return translator
-    
-translator_pipeline_fr = get_translation_model_and_tokenizer('en', 'fr')
-translator_pipeline_de = get_translation_model_and_tokenizer('en', 'de')
-translator_pipeline_es = get_translation_model_and_tokenizer('en', 'es')
-translator_pipeline_it = get_translation_model_and_tokenizer('en', 'it')
-translator_pipeline_pt = get_translation_model_and_tokenizer('en', 'pt')
-translator_pipeline_nl = get_translation_model_and_tokenizer('en', 'nl')
-translator_pipeline_da = get_translation_model_and_tokenizer('en', 'da')
-translator_pipeline_el = get_translation_model_and_tokenizer('en', 'el')
-translator_pipeline_fi = get_translation_model_and_tokenizer('en', 'fi')
-translator_pipeline_sv = get_translation_model_and_tokenizer('en', 'sv')
-translator_pipeline_ro = get_translation_model_and_tokenizer('en', 'ro')
-translator_pipeline_hu = get_translation_model_and_tokenizer('en', 'hu')
-translator_pipeline_cs = get_translation_model_and_tokenizer('en', 'cs')
-translator_pipeline_pl = get_translation_model_and_tokenizer('en', 'pl')
-translator_pipeline_bg = get_translation_model_and_tokenizer('en', 'bg')
-translator_pipeline_sl = get_translation_model_and_tokenizer('en', 'sl')
-translator_pipeline_et = get_translation_model_and_tokenizer('en', 'et')
-translator_pipeline_lt = get_translation_model_and_tokenizer('en', 'lt')
-translator_pipeline_sk = get_translation_model_and_tokenizer('en', 'sk')
-translator_pipeline_mt = get_translation_model_and_tokenizer('en', 'mt')
-translator_pipeline_hr = get_translation_model_and_tokenizer('en', 'hr')
-translator_pipeline_ga = get_translation_model_and_tokenizer('en', 'ga')
 
 
-def compute_all_crosslingualsummaries():
+def generate_summary(pipe, text):
+    cleaned_document = clean_text(text)
+    tokenizer_kwargs = {'truncation': True, 'max_length': 16000, 'return_text': True}
+    summary = pipe(cleaned_document, **tokenizer_kwargs)
+    return summary[0]['summary_text']
+
+
+def chunk_by_max_subword_length_text(text, tokenizer, max_length=512):
+    """
+    Uses heuristics (or fallback) to split text into paragraphs approximately as long as the tokenizer allows.
+    """
+    # Try to split by paragraph-level
+    paragraph_split = [split for split in text.split("\n") if split.strip("\t ")]
+    # Ensure each one is shorter, otherwise split those again
+
+    return obtain_splits(text, tokenizer, max_length=max_length)
+
+
+def obtain_splits(split, tokenizer, max_length, depth=0):
+    final_splits = []
+    current_buffer = ""
+    current_buffer_len = 0
+    for unit in split:
+        # Record the subword length
+        paragraph_length = len(tokenizer.encode(unit))
+        # See if it is too long
+        if paragraph_length > max_length:
+            # Previous buffer definitely needs to be appended
+            final_splits.append(current_buffer)
+            # Also reset the buffer
+            current_buffer = ""
+            current_buffer_len = 0
+            # And then recursively call this function again
+            if depth >= 1:
+                print(split)
+            approximate_sentence_split = unit.split(".")
+            final_splits.extend(obtain_splits(approximate_sentence_split, tokenizer, max_length, depth=depth+1))
+
+        # Otherwise, add the text to the current buffer if still possible
+        else:
+            # Extend by current buffer if it would otherwise be too long
+            if current_buffer_len + paragraph_length >= max_length:
+                final_splits.append(current_buffer)
+                # Reset buffer
+                current_buffer = unit
+                current_buffer_len = 0
+
+    # Leftover last sample
+    if current_buffer:
+        final_splits.append(current_buffer)
+
+    return final_splits
+
+
+
+
+
+def compute_all_crosslingual_summaries(pipeline, device=-1):
+    langs = ["es", "de", "fr", "it", "da", "nl", "pt", "ro", "fi", "sv", "bg", "el", "li", "hu", "cs", "et",
+     "lt", "pl", "sk", "sl", "mt", "hr", "ga"]
+
     with open("../Analysis/clean_data.pkl", "rb") as f:
         data = pickle.load(f)
 
-    # English Text
+    # TODO: This can be extended to the full dataset to get full 24-to-24 translation
     data = {"english": data["english"]}
-
-    # Main Code
     for language, all_data in data.items():
-        final_summary = {}
         for split, samples in all_data.items():
+            # TODO: We could arguably fine-tune on this data?
             if split == "train":
                 continue
             else:
-                for celex_id, sample in tqdm(samples.items()):               
-                    cleaned_document = clean_text(sample["reference_text"])
-                    tokenizer_kwargs = {'truncation':True,'max_length':16000, 'return_text':True}
-                    summary = summarization_pipeline(cleaned_document, **tokenizer_kwargs)
-                    summary_text = summary[0]['summary_text']
-                    summary_dict = {}
-                    summary_dict['systemSummary'] = summary_text
-                    summary_dict['goldSummary'] = sample["summary_text"]
-                    
-                    translated_summary_de = translator_pipeline_de(summary_text, max_length=len(summary_text))
-                    summary_dict['En2DeSum'] = translated_summary_de[0]['translation_text']
+                for lang in langs:
+                    translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
+                    for celex_id, sample in tqdm(samples.items()):
 
-                    translated_summary_fr = translator_pipeline_fr(summary_text, max_length=len(summary_text))
-                    summary_dict['En2FrSum'] = translated_summary_fr[0]['translation_text']
+                        summary_text = generate_summary(pipeline, sample["reference_text"])
 
-                    translated_summary_es = translator_pipeline_es(summary_text, max_length=len(summary_text))
-                    summary_dict['En2EsSum'] = translated_summary_es[0]['translation_text']
-                    
-                    translated_summary_it = translator_pipeline_it(summary_text, max_length=len(summary_text))
-                    summary_dict['En2ItSum'] = translated_summary_it[0]['translation_text']
+                        chunked_summary = chunk_by_max_subword_length_text(summary_text,
+                                                                           pipeline.tokenizer,
+                                                                           max_length=512)
+                        translated_summary = translator_pipeline(chunked_summary, lang=lang)
 
-                    translated_summary_pt = translator_pipeline_pt(summary_text, max_length=len(summary_text))
-                    summary_dict['En2PtSum'] = translated_summary_pt[0]['translation_text']
+                        out_path = os.path.join("translated", lang, split)
+                        with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
+                            f.write(translated_summary[0]["translation_text"])
 
-                    translated_summary_nl = translator_pipeline_nl(summary_text, max_length=len(summary_text))
-                    summary_dict['En2NlSum'] = translated_summary_nl[0]['translation_text']
-
-                    translated_summary_da = translator_pipeline_da(summary_text, max_length=len(summary_text))
-                    summary_dict['En2DaSum'] = translated_summary_da[0]['translation_text']
-
-                    translated_summary_el = translator_pipeline_el(summary_text, max_length=len(summary_text))
-                    summary_dict['En2ElSum'] = translated_summary_el[0]['translation_text']
-
-                    translated_summary_fi = translator_pipeline_fi(summary_text, max_length=len(summary_text))
-                    summary_dict['En2FiSum'] = translated_summary_fi[0]['translation_text']
-
-                    translated_summary_sv = translator_pipeline_sv(summary_text, max_length=len(summary_text))
-                    summary_dict['En2SvSum'] = translated_summary_sv[0]['translation_text']
-
-                    translated_summary_ro = translator_pipeline_ro(summary_text, max_length=len(summary_text))
-                    summary_dict['En2RoSum'] = translated_summary_ro[0]['translation_text']
-
-                    translated_summary_hu = translator_pipeline_hu(summary_text, max_length=len(summary_text))
-                    summary_dict['En2HuSum'] = translated_summary_hu[0]['translation_text']
-
-                    translated_summary_cs = translator_pipeline_cs(summary_text, max_length=len(summary_text))
-                    summary_dict['En2CsSum'] = translated_summary_cs[0]['translation_text']
-
-                    translated_summary_pl = translator_pipeline_pl(summary_text, max_length=len(summary_text))
-                    summary_dict['En2PlSum'] = translated_summary_pl[0]['translation_text']
-
-                    translated_summary_bg = translator_pipeline_bg(summary_text, max_length=len(summary_text))
-                    summary_dict['En2BgSum'] = translated_summary_bg[0]['translation_text']
-
-                    translated_summary_sl = translator_pipeline_sl(summary_text, max_length=len(summary_text))
-                    summary_dict['En2SlSum'] = translated_summary_sl[0]['translation_text']
-
-                    translated_summary_et = translator_pipeline_et(summary_text, max_length=len(summary_text))
-                    summary_dict['En2EtSum'] = translated_summary_et[0]['translation_text']
-
-                    translated_summary_lt = translator_pipeline_lt(summary_text, max_length=len(summary_text))
-                    summary_dict['En2LtSum'] = translated_summary_lt[0]['translation_text']
-
-                    translated_summary_sk = translator_pipeline_sk(summary_text, max_length=len(summary_text))
-                    summary_dict['En2SkSum'] = translated_summary_sk[0]['translation_text']
-
-                    translated_summary_mt = translator_pipeline_mt(summary_text, max_length=len(summary_text))
-                    summary_dict['En2MtSum'] = translated_summary_mt[0]['translation_text']
-
-                    translated_summary_hr = translator_pipeline_hr(summary_text, max_length=len(summary_text))
-                    summary_dict['En2HrSum'] = translated_summary_hr[0]['translation_text']
-
-                    translated_summary_ga = translator_pipeline_ga(summary_text, max_length=len(summary_text))
-                    summary_dict['En2GaSum'] = translated_summary_ga[0]['translation_text']
-
-                    final_summary[celex_id] = summary_dict
-                
-                file_name = "abstractive_sumTrans_"+split+"_"+language+".pkl"
-                final_file = open(file_name, "wb")
-                pickle.dump(final_summary, final_file)
-                final_file.close()
 
 if __name__ == '__main__':
-    compute_all_crosslingualsummaries()
+    device = -1
+
+    summarization_pipeline = pipeline('summarization', model="d0r1h/LEDBill", device=device)
+    compute_all_crosslingual_summaries(summarization_pipeline, device=device)
+
+
+
