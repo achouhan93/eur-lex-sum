@@ -6,7 +6,7 @@ from tqdm import tqdm
 from functools import lru_cache
 import pickle
 
-from transformers import pipeline
+from transformers import pipeline, BertTokenizer
 
 
 def get_split_text(text):
@@ -89,17 +89,17 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
         else:
             # Extend by current buffer if it would otherwise be too long
             if current_buffer_len + unit_length >= max_length:
-                final_splits.append(current_buffer)
+                final_splits.append(current_buffer.rstrip(" "))
                 # Reset buffer
-                current_buffer = unit
+                current_buffer = ""
                 current_buffer_len = 0
-            else:
-                current_buffer += f" {unit}"
-                current_buffer_len += unit_length
+            # In either case append current unit
+            current_buffer += f"{unit} "
+            current_buffer_len += unit_length + 1
 
     # Leftover last sample
     if current_buffer:
-        final_splits.append(current_buffer)
+        final_splits.append(current_buffer.rstrip(" "))
 
     return final_splits
 
@@ -138,6 +138,3 @@ if __name__ == "__main__":
 
     summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device)
     compute_all_crosslingual_summaries(summarization_pipeline, device=device)
-
-
-
