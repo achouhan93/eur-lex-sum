@@ -134,6 +134,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                         translated_summary = translator_pipeline(chunked_summary)
 
                         out_path = os.path.join("translated", lang, split)
+                        os.makedirs(out_path, exist_ok=True)
                         with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
                             f.write(translated_summary[0]["translation_text"])
 
