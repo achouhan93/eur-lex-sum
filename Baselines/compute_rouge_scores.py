@@ -50,8 +50,11 @@ def print_aggregate(result: Dict) -> None:
     print(f"----------------------------------------")
     print(output)
 
+
 if __name__ == "__main__":
     fast = False
+
+
     langs = ['english', 'french', 'german', 'spanish', 'italian', 'portuguese', 'greek', 'dutch', 'danish', 'finnish',
              'swedish', 'romanian', 'hungarian', 'czech', 'polish', 'lithuanian', 'slovenian', 'latvian', 'bulgarian',
              'estonian', 'slovak', 'maltese', 'croatian', 'irish']
