@@ -132,7 +132,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
                         # Skip samples to only recompute from position
-                        if idx < 187 and split == "test":
+                        if (idx < 187 and split == "test") or split == "validation":
                             continue
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
