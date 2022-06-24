@@ -47,10 +47,11 @@ def get_translation_model_and_tokenizer(src, dst, device=-1):
     return translator
 
 
-def generate_summary(pipe, text):
+def generate_summary(pipe, text, max_length=4096):
     cleaned_document = clean_text(text)
-    tokenizer_kwargs = {"truncation": True, "max_length": 16000, "return_text": True}
-    summary = pipe(cleaned_document, **tokenizer_kwargs)
+    chunked_document = chunk_by_max_subword_length(cleaned_document, pipe.tokenizer, max_length)
+    tokenizer_kwargs = {"truncation": True, "max_length": max_length, "return_text": True}
+    summary = pipe(chunked_document, **tokenizer_kwargs)
     return summary[0]["summary_text"]
 
 
@@ -121,6 +122,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
             else:
                 for lang in langs:
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
+                    print(f"Processing {language} to {lang} summarization-translation:")
                     for celex_id, sample in tqdm(samples.items()):
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
@@ -134,7 +136,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 
 
 if __name__ == "__main__":
-    device = -1
+    device = 1
 
     summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device)
     compute_all_crosslingual_summaries(summarization_pipeline, device=device)
