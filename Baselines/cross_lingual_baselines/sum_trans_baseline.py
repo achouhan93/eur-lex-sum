@@ -108,7 +108,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
     langs = ["es", "de", "fr", "it", "da", "nl", "pt", "ro", "fi", "sv", "bg", "el", "li", "hu", "cs", "et",
              "lt", "pl", "sk", "sl", "mt", "hr", "ga"]
 
-    with open("../Analysis/clean_data.pkl", "rb") as f:
+    with open("../../Analysis/clean_data.pkl", "rb") as f:
         data = pickle.load(f)
 
     # TODO: This can be extended to the full dataset to get full 24-to-24 translation
