@@ -71,9 +71,9 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
     current_buffer_len = 0
     for unit in split:
         # Record the subword length
-        paragraph_length = len(tokenizer.encode(unit))
+        unit_length = len(tokenizer.encode(unit))
         # See if it is too long
-        if paragraph_length > max_length:
+        if unit_length > max_length:
             # Previous buffer definitely needs to be appended
             final_splits.append(current_buffer)
             # Also reset the buffer
@@ -88,11 +88,14 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
         # Otherwise, add the text to the current buffer if still possible
         else:
             # Extend by current buffer if it would otherwise be too long
-            if current_buffer_len + paragraph_length >= max_length:
+            if current_buffer_len + unit_length >= max_length:
                 final_splits.append(current_buffer)
                 # Reset buffer
                 current_buffer = unit
                 current_buffer_len = 0
+            else:
+                current_buffer += f" {unit}"
+                current_buffer_len += unit_length
 
     # Leftover last sample
     if current_buffer:
