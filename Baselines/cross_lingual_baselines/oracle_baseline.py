@@ -7,7 +7,7 @@ from functools import lru_cache
 import pickle
 
 from transformers import pipeline
-from sum_trans_baseline import get_translation_model_and_tokenizer, chunk_by_max_subword_length
+from sum_trans_baseline import get_translation_model_and_tokenizer, chunk_by_max_subword_length, clean_celex_id
 
 
 def compute_oracle_translated_summaries(device=-1):
@@ -34,7 +34,7 @@ def compute_oracle_translated_summaries(device=-1):
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
 
-                        with open(os.path.join("../gold/", language, split, f"{celex_id}.txt"), "r") as f:
+                        with open(os.path.join("../gold/", language, split, f"{clean_celex_id(celex_id)}.txt"), "r") as f:
                             summary_text = "\n".join(f.readlines())
                         chunked_summary = chunk_by_max_subword_length(summary_text, translator_pipeline.tokenizer, 500)
                         translated_summary = translator_pipeline(chunked_summary)
