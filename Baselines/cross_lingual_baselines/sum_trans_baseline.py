@@ -49,12 +49,12 @@ def get_translation_model_and_tokenizer(src, dst, device=-1):
 
 def generate_summary(pipe, text):
     cleaned_document = clean_text(text)
-    tokenizer_kwargs = {'truncation': True, 'max_length': 16000, 'return_text': True}
+    tokenizer_kwargs = {"truncation": True, "max_length": 16000, "return_text": True}
     summary = pipe(cleaned_document, **tokenizer_kwargs)
-    return summary[0]['summary_text']
+    return summary[0]["summary_text"]
 
 
-def chunk_by_max_subword_length_text(text, tokenizer, max_length=512):
+def chunk_by_max_subword_length(text, tokenizer, max_length=512):
     """
     Uses heuristics (or fallback) to split text into paragraphs approximately as long as the tokenizer allows.
     """
@@ -62,7 +62,7 @@ def chunk_by_max_subword_length_text(text, tokenizer, max_length=512):
     paragraph_split = [split for split in text.split("\n") if split.strip("\t ")]
     # Ensure each one is shorter, otherwise split those again
 
-    return obtain_splits(text, tokenizer, max_length=max_length)
+    return obtain_splits(paragraph_split, tokenizer, max_length=max_length)
 
 
 def obtain_splits(split, tokenizer, max_length, depth=0):
@@ -101,12 +101,9 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
     return final_splits
 
 
-
-
-
 def compute_all_crosslingual_summaries(pipeline, device=-1):
     langs = ["es", "de", "fr", "it", "da", "nl", "pt", "ro", "fi", "sv", "bg", "el", "li", "hu", "cs", "et",
-     "lt", "pl", "sk", "sl", "mt", "hr", "ga"]
+             "lt", "pl", "sk", "sl", "mt", "hr", "ga"]
 
     with open("../Analysis/clean_data.pkl", "rb") as f:
         data = pickle.load(f)
@@ -125,9 +122,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
 
-                        chunked_summary = chunk_by_max_subword_length_text(summary_text,
-                                                                           pipeline.tokenizer,
-                                                                           max_length=512)
+                        chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 512)
                         translated_summary = translator_pipeline(chunked_summary, lang=lang)
 
                         out_path = os.path.join("translated", lang, split)
@@ -135,10 +130,10 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                             f.write(translated_summary[0]["translation_text"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     device = -1
 
-    summarization_pipeline = pipeline('summarization', model="d0r1h/LEDBill", device=device)
+    summarization_pipeline = pipeline("summarization", model="d0r1h/LEDBill", device=device)
     compute_all_crosslingual_summaries(summarization_pipeline, device=device)
 
 
