@@ -52,8 +52,8 @@ def generate_summary(pipe, text, max_length=4096):
     chunked_document = chunk_by_max_subword_length(cleaned_document, pipe.tokenizer, max_length)
     print(f"Cut document into {len(chunked_document)} chunks.")
     tokenizer_kwargs = {"truncation": True, "max_length": max_length, "return_text": True}
-    summary = pipe(chunked_document[:2], **tokenizer_kwargs)
-    return summary[0]["summary_text"]
+    summary = pipe(chunked_document, **tokenizer_kwargs)
+    return "\n".join([segment["summary_text"] for segment in summary])
 
 
 def chunk_by_max_subword_length(text, tokenizer, max_length=512):
@@ -136,7 +136,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                         out_path = os.path.join("translated", lang, split)
                         os.makedirs(out_path, exist_ok=True)
                         with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
-                            f.write(translated_summary[0]["translation_text"])
+                            f.write("\n".join([segment["translation_text"] for segment in translated_summary]))
 
 
 if __name__ == "__main__":
