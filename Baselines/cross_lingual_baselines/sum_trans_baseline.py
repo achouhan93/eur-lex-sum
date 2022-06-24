@@ -56,7 +56,7 @@ def generate_summary(pipe, text, max_length=4096):
     return "\n".join([segment["summary_text"] for segment in summary])
 
 
-def chunk_by_max_subword_length(text, tokenizer, max_length=500):
+def chunk_by_max_subword_length(text, tokenizer, max_length=512):
     """
     Uses heuristics (or fallback) to split text into paragraphs approximately as long as the tokenizer allows.
     """
@@ -137,7 +137,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
 
-                        chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 512)
+                        chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 508)
                         translated_summary = translator_pipeline(chunked_summary)
 
                         out_path = os.path.join("translated", lang, split)
