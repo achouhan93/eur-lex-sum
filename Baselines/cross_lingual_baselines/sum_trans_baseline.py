@@ -131,7 +131,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                         summary_text = generate_summary(pipeline, sample["reference_text"])
 
                         chunked_summary = chunk_by_max_subword_length(summary_text, pipeline.tokenizer, 512)
-                        translated_summary = translator_pipeline(chunked_summary, lang=lang)
+                        translated_summary = translator_pipeline(chunked_summary)
 
                         out_path = os.path.join("translated", lang, split)
                         with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
