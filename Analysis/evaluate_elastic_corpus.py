@@ -166,8 +166,8 @@ if __name__ == '__main__':
     x_value = [3*i for i in range(len(x_label))]
     plt.bar(x_value, y, color='#1b9e77', width=2.6)
     # Use language codes for better readability
-    x_label = ["en", "es", "de", "fr", "it", "dk", "nl", "pt", "ro", "fi", "sw", "bg", "el", "li", "hu", "cz", "et",
-               "lt", "po", "sk", "sl", "mt", "cr", "ga"]
+    x_label = ["en", "es", "de", "fr", "it", "da", "nl", "pt", "ro", "fi", "sv", "bg", "el", "li", "hu", "cs", "et",
+               "lt", "pl", "sk", "sl", "mt", "hr", "ga"]
     plt.xticks(x_value, x_label, rotation=90)
     plt.xlim([-2, max(x_value)+2])
 
