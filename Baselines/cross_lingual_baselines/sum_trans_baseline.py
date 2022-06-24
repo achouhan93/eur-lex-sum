@@ -124,16 +124,13 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                 continue
             else:
                 for lang in langs:
-                    # Skip to only Spanish for now
-                    if lang != "es":
+                    # Skip to only Maltese for now
+                    if lang != "mt":
                         continue
 
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
-                        # Skip already computed samples for these models:
-                        if split == "validation" and idx < 62:
-                            continue
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
 
