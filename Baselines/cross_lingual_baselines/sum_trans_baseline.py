@@ -50,6 +50,7 @@ def get_translation_model_and_tokenizer(src, dst, device=-1):
 def generate_summary(pipe, text, max_length=4096):
     cleaned_document = clean_text(text)
     chunked_document = chunk_by_max_subword_length(cleaned_document, pipe.tokenizer, max_length)
+    print(f"Cut document into {len(chunked_document)} chunks.")
     tokenizer_kwargs = {"truncation": True, "max_length": max_length, "return_text": True}
     summary = pipe(chunked_document, **tokenizer_kwargs)
     return summary[0]["summary_text"]
@@ -76,7 +77,8 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
         # See if it is too long
         if unit_length > max_length:
             # Previous buffer definitely needs to be appended
-            final_splits.append(current_buffer)
+            if current_buffer_len > 10:
+                final_splits.append(current_buffer)
             # Also reset the buffer
             current_buffer = ""
             current_buffer_len = 0
@@ -90,7 +92,8 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
         else:
             # Extend by current buffer if it would otherwise be too long
             if current_buffer_len + unit_length >= max_length:
-                final_splits.append(current_buffer.rstrip(" "))
+                if current_buffer_len > 10:
+                    final_splits.append(current_buffer.rstrip(" "))
                 # Reset buffer
                 current_buffer = ""
                 current_buffer_len = 0
@@ -99,7 +102,7 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
             current_buffer_len += unit_length + 1
 
     # Leftover last sample
-    if current_buffer:
+    if current_buffer and current_buffer_len > 10:
         final_splits.append(current_buffer.rstrip(" "))
 
     return final_splits
