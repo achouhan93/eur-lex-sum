@@ -131,6 +131,9 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
+                        # Skip samples to only recompute from position
+                        if idx < 187 and split == "test":
+                            continue
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
                         chunked_summary = chunk_by_max_subword_length(summary_text, translator_pipeline.tokenizer, 500)
