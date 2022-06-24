@@ -22,6 +22,15 @@ def get_split_text(text):
     return split_text
 
 
+def clean_celex_id(celex_id):
+    # "/" is actually never encountered, but better safe than sorry.
+    celex_id = celex_id.replace("/", "-")
+    celex_id = celex_id.replace("(", "-")
+    celex_id = celex_id.replace(")", "-")
+
+    return celex_id
+
+
 def clean_text(text):
     """
     Internally converts the text to a simple paragraph estimate, and re-joins it after simple cleaning operations.
@@ -131,9 +140,6 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
-                        # Skip samples to only recompute from position
-                        if (idx < 187 and split == "test") or split == "validation":
-                            continue
 
                         summary_text = generate_summary(pipeline, sample["reference_text"])
                         chunked_summary = chunk_by_max_subword_length(summary_text, translator_pipeline.tokenizer, 500)
