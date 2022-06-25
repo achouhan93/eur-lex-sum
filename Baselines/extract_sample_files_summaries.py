@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
                 if language == "spanish":
                     for method in ["oracle", "translated", "lexrank"]:
-                        out_path = os.path.join("./generated_samples/", "oracle", language, split)
+                        out_path = os.path.join("./generated_samples/", method, language, split)
                         os.makedirs(out_path, exist_ok=True)
                         for celex_id, _ in samples.items():
                             in_file = os.path.join("./cross_lingual_baselines/", method, "es", split,
