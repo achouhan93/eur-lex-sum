@@ -30,9 +30,13 @@ def compute_oracle_translated_summaries(device=-1):
                     if lang != "es":
                         continue
 
+
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
                     print(f"Processing {language} to {lang} summarization-translation:")
                     for idx, (celex_id, sample) in enumerate(tqdm(samples.items())):
+
+                        if split == "validation" and idx < 120:
+                            continue
 
                         with open(os.path.join("../paragraph/", language, split, f"{clean_celex_id(celex_id)}.txt"), "r") as f:
                             summary_text = "\n".join(f.readlines())
