@@ -94,8 +94,10 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
             # And then recursively call this function again
             if depth == 1:
                 approximate_sentence_split = unit.split(";")
-            elif depth >= 2:
+            elif depth == 2:
                 approximate_sentence_split = unit.split(":")
+            elif depth >= 3:
+                approximate_sentence_split = unit.split(",")
                 print(unit)
             else:
                 approximate_sentence_split = unit.split(".")
