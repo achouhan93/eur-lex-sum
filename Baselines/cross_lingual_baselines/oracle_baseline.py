@@ -41,7 +41,7 @@ def compute_oracle_translated_summaries(device=-1):
 
                         out_path = os.path.join("oracle", lang, split)
                         os.makedirs(out_path, exist_ok=True)
-                        with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
+                        with open(os.path.join(out_path, f"{clean_celex_id(celex_id)}.txt"), "w") as f:
                             f.write("\n".join([segment["translation_text"] for segment in translated_summary]))
 
 

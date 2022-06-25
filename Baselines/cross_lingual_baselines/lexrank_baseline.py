@@ -1,12 +1,8 @@
 # Summarisation Task
-import torch.cuda
 import os
-import regex
 from tqdm import tqdm
-from functools import lru_cache
 import pickle
 
-from transformers import pipeline
 from sum_trans_baseline import get_translation_model_and_tokenizer, chunk_by_max_subword_length, clean_celex_id
 
 
@@ -37,6 +33,8 @@ def compute_oracle_translated_summaries(device=-1):
 
                         if split == "validation" and idx < 120:
                             continue
+                        elif split == "test" and idx < 114:
+                            continue
 
                         with open(os.path.join("../paragraph/", language, split, f"{clean_celex_id(celex_id)}.txt"), "r") as f:
                             summary_text = "\n".join(f.readlines())
@@ -45,7 +43,7 @@ def compute_oracle_translated_summaries(device=-1):
 
                         out_path = os.path.join("lexrank", lang, split)
                         os.makedirs(out_path, exist_ok=True)
-                        with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
+                        with open(os.path.join(out_path, f"{clean_celex_id(celex_id)}.txt"), "w") as f:
                             f.write("\n".join([segment["translation_text"] for segment in translated_summary]))
 
 

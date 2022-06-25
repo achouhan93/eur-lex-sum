@@ -96,6 +96,7 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
                 approximate_sentence_split = unit.split(";")
             elif depth >= 2:
                 approximate_sentence_split = unit.split(":")
+                print(unit)
             else:
                 approximate_sentence_split = unit.split(".")
             final_splits.extend(obtain_splits(approximate_sentence_split, tokenizer, max_length, depth=depth+1))
@@ -150,7 +151,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
 
                         out_path = os.path.join("translated", lang, split)
                         os.makedirs(out_path, exist_ok=True)
-                        with open(os.path.join(out_path, f"{celex_id}.txt"), "w") as f:
+                        with open(os.path.join(out_path, f"{clean_celex_id(celex_id)}.txt"), "w") as f:
                             f.write("\n".join([segment["translation_text"] for segment in translated_summary]))
 
 
