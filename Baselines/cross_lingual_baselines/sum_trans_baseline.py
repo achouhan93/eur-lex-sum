@@ -96,8 +96,10 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
                 approximate_sentence_split = unit.split(";")
             elif depth == 2:
                 approximate_sentence_split = unit.split(":")
-            elif depth >= 3:
+            elif depth == 3:
                 approximate_sentence_split = unit.split(",")
+            elif depth >= 4:
+                approximate_sentence_split = unit.split("+")
                 print(unit)
             else:
                 approximate_sentence_split = unit.split(".")
@@ -140,7 +142,7 @@ def compute_all_crosslingual_summaries(pipeline, device=-1):
             else:
                 for lang in langs:
                     # Skip to only Maltese for now
-                    if lang != "mt":
+                    if lang != "es":
                         continue
 
                     translator_pipeline = get_translation_model_and_tokenizer("en", lang, device=device)
