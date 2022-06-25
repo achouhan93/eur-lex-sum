@@ -38,6 +38,7 @@ if __name__ == '__main__':
                         out_path = os.path.join("./generated_samples/", "oracle", language, split)
                         os.makedirs(out_path, exist_ok=True)
                         for celex_id, _ in samples.items():
-                            in_file = os.path.join("./cross_lingual_baselines/", method, language, split, f"{celex_id}.txt")
+                            in_file = os.path.join("./cross_lingual_baselines/", method, "es", split,
+                                                   f"{clean_celex_id(celex_id)}.txt")
                             out_file = os.path.join(out_path, f"{clean_celex_id(celex_id)}.txt")
                             shutil.copyfile(in_file, out_file)
