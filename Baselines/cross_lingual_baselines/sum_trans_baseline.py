@@ -92,9 +92,12 @@ def obtain_splits(split, tokenizer, max_length, depth=0):
             current_buffer = ""
             current_buffer_len = 0
             # And then recursively call this function again
-            if depth >= 1:
-                print(split)
-            approximate_sentence_split = unit.split(".")
+            if depth == 1:
+                approximate_sentence_split = unit.split(";")
+            elif depth >= 2:
+                approximate_sentence_split = unit.split(":")
+            else:
+                approximate_sentence_split = unit.split(".")
             final_splits.extend(obtain_splits(approximate_sentence_split, tokenizer, max_length, depth=depth+1))
 
         # Otherwise, add the text to the current buffer if still possible
