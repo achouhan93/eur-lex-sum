@@ -72,8 +72,11 @@ def get_scores(language, lang, system_folder, fast=False):
 
 if __name__ == "__main__":
 
+    print("Summarized and translated model")
     get_scores("spanish", "es", "./translated")
+    print("Oracle translations")
     get_scores("spanish", "es", "./oracle")
+    print("Lexrank translations")
     get_scores("spanish", "es", "./lexrank")
 
 
