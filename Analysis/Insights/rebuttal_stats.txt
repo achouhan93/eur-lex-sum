@@ -1,0 +1,32 @@
+
+40 samples are available in exactly 1 languages.
+6 samples are available in exactly 2 languages.
+5 samples are available in exactly 3 languages.
+94 samples are available in exactly 4 languages.
+30 samples are available in exactly 5 languages.
+1 samples are available in exactly 7 languages.
+1 samples are available in exactly 8 languages.
+9 samples are available in exactly 9 languages.
+1 samples are available in exactly 10 languages.
+12 samples are available in exactly 11 languages.
+4 samples are available in exactly 12 languages.
+2 samples are available in exactly 13 languages.
+11 samples are available in exactly 14 languages.
+18 samples are available in exactly 15 languages.
+1 samples are available in exactly 16 languages.
+2 samples are available in exactly 17 languages.
+6 samples are available in exactly 18 languages.
+5 samples are available in exactly 19 languages.
+15 samples are available in exactly 20 languages.
+25 samples are available in exactly 21 languages.
+141 samples are available in exactly 22 languages.
+760 samples are available in exactly 23 languages.
+
+Length of validation set: 187
+Length of test set: 188
+-> This implies that we have an additional 375 samples with 24 languages available.
+
+84.14% of samples are available in 20 or more languages.
+11.96% of samples are available in less than 10 languages.
+
+-> This leaves roughly 3.89% of samples to have between 10-20 languages available.
