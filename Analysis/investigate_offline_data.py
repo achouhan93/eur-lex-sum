@@ -77,16 +77,17 @@ def filter_duplicates(celex_ids, reference_lengths, summary_texts, write_out=Fal
     multi_reference_texts = {}
 
     for _, matched_references in by_summary_lookup.items():
-        longest_reference = get_longest_reference(matched_references)
-        celex_ids_to_keep.append(longest_reference)
+        longest_reference_celex_id = get_longest_reference(matched_references)
+        celex_ids_to_keep.append(longest_reference_celex_id)
 
         # Append celex_id to retain this subset
-        if len(matched_references) > 1:
-            has_multiple_references.append(longest_reference[0])
-            multi_reference_texts[longest_reference[0]] = combine_reference_texts(reference_texts, matched_references)
-
-        else:
-            has_single_reference.append(longest_reference[0])
+        if write_out:
+            if len(matched_references) > 1:
+                has_multiple_references.append(longest_reference_celex_id)
+                multi_reference_texts[longest_reference_celex_id] = combine_reference_texts(reference_texts,
+                                                                                            matched_references)
+            else:
+                has_single_reference.append(longest_reference_celex_id)
 
     if write_out:
         with open("./Insights/multiple_reference_subset.json", "w") as f:
@@ -108,7 +109,7 @@ def get_longest_reference(matches):
 def combine_reference_texts(reference_texts, match_objects) -> str:
     concatenated_text = ""
     for match in match_objects:
-        concatenated_text += reference_texts[match[3]] + "\n"
+        concatenated_text += reference_texts[match[2]] + "\n"
 
     return concatenated_text
 
