@@ -48,7 +48,7 @@ def get_lengths_and_ratios(reference_texts, summary_texts, valid_ids=None, celex
     return reference_token_lengths, summary_token_lengths, compression_ratios
 
 
-def filter_duplicates(celex_ids, reference_lengths, summary_texts, write_out=False):
+def filter_duplicates(celex_ids, reference_lengths, summary_texts, write_out=False, reference_texts=None):
     """
     Will remove duplicates by only maintaining the *longest* reference text for one particular summary.
     """
@@ -56,15 +56,45 @@ def filter_duplicates(celex_ids, reference_lengths, summary_texts, write_out=Fal
     by_summary_lookup = {}
 
     for idx, (celex_id, summary_text) in enumerate(zip(celex_ids, summary_texts)):
-        by_summary_lookup[summary_text] = [(celex_id, reference_lengths[idx], idx)]
-        for other_idx, (other_celex_id, other_summary_text) in enumerate(zip(celex_ids, summary_texts)):
-            # Check if text is the same, but a different sample
-            if summary_text == other_summary_text and celex_id != other_celex_id:
-                by_summary_lookup[summary_text].append((other_celex_id, reference_lengths[other_idx], other_idx))
+        if summary_text in by_summary_lookup.keys():
+            by_summary_lookup[summary_text].append((celex_id, reference_lengths[idx], idx))
+        else:
+            by_summary_lookup[summary_text] = [(celex_id, reference_lengths[idx], idx)]
+
+        # FIXME: This is a non-critical bug that temporarily introduces multiple "other summaries" to by_summary_lookup
+        #  since it iterates over the other ids potentially multiple times, but only ever checking for the current id,
+        #  and not other ones that might be in the list already.
+        # for other_idx, (other_celex_id, other_summary_text) in enumerate(zip(celex_ids, summary_texts)):
+        #     # Check if text is the same, but a different sample
+        #     if summary_text == other_summary_text and celex_id != other_celex_id:
+        #         by_summary_lookup[summary_text].append((other_celex_id, reference_lengths[other_idx], other_idx))
 
     celex_ids_to_keep = []
+
+    # Necessary for writing out texts
+    has_multiple_references = []
+    has_single_reference = []
+    multi_reference_texts = {}
+
     for _, matched_references in by_summary_lookup.items():
-        celex_ids_to_keep.append(get_longest_reference(matched_references))
+        longest_reference = get_longest_reference(matched_references)
+        celex_ids_to_keep.append(longest_reference)
+
+        # Append celex_id to retain this subset
+        if len(matched_references) > 1:
+            has_multiple_references.append(longest_reference[0])
+            multi_reference_texts[longest_reference[0]] = combine_reference_texts(reference_texts, matched_references)
+
+        else:
+            has_single_reference.append(longest_reference[0])
+
+    if write_out:
+        with open("./Insights/multiple_reference_subset.json", "w") as f:
+            json.dump(has_multiple_references, f)
+        with open("./Insights/multiple_reference_texts.json", "w") as f:
+            json.dump(multi_reference_texts, f)
+        with open("./Insights/single_reference_subset.json", "w") as f:
+            json.dump(has_single_reference, f)
 
     return celex_ids_to_keep
 
@@ -73,6 +103,14 @@ def get_longest_reference(matches):
     sort_by_length = sorted(matches, key=lambda row: row[1], reverse=True)
     select_longest_texts_celex_id = sort_by_length[0][0]
     return select_longest_texts_celex_id
+
+
+def combine_reference_texts(reference_texts, match_objects) -> str:
+    concatenated_text = ""
+    for match in match_objects:
+        concatenated_text += reference_texts[match[3]] + "\n"
+
+    return concatenated_text
 
 
 def filter_short_documents(celex_ids, reference_lengths, summary_lengths, filtered_id_set) -> List[str]:
@@ -102,19 +140,12 @@ def get_valid_keys_for_language(samples, language, write_out_filtered_samples=Fa
             celex_ids.append(sample["celex_id"])
     reference_lengths, summary_lengths, _ = get_lengths_and_ratios(references, summaries)
 
-    filtered_celex_ids_by_duplicates = set(filter_duplicates(celex_ids, reference_lengths, summaries,
-                                                             write_out_filtered_samples))
-    # if write_out_filtered_samples and language == "english":
-    #     not_added = []
-    #     added = []
-    #     # Iterate through all samples
-    #     for sample in samples:
-    #         # Check if the sample is actually still in the filtered list
-    #         if language in sample.keys():
-    #             if sample["celex_id"] not in filtered_celex_ids_by_duplicates:
-    #                 not_added.append(sample["celex_id"])
-    #             else:
-    #                 added.append(sample["celex_id"])
+    if write_out_filtered_samples:
+        filtered_celex_ids_by_duplicates = set(filter_duplicates(celex_ids, reference_lengths, summaries,
+                                                                 write_out=True, reference_texts=references))
+    else:
+        filtered_celex_ids_by_duplicates = set(filter_duplicates(celex_ids, reference_lengths, summaries,
+                                                                 write_out=False))
 
     filtered_celex_ids = filter_short_documents(celex_ids, reference_lengths, summary_lengths,
                                                 filtered_celex_ids_by_duplicates)
@@ -140,7 +171,6 @@ def initial_analysis(samples):
             celex_ids.append(sample["celex_id"])
     print("Extracted texts")
     print("Starting reference processing...")
-
 
     reference_token_lengths, summary_token_lengths, compression_ratios = get_lengths_and_ratios(reference_texts,
                                                                                                 summary_texts)
@@ -261,8 +291,12 @@ def identify_lang_ids(data: List[Dict], langs: List[str]) -> Tuple:
     print("Compute language-specific valid samples...")
     for lang in tqdm(langs):
         # FIXME: Enabled output of filtered sample for rebuttal
-        by_language_valid_ids[lang] = get_valid_keys_for_language(data, language=lang, write_out_filtered_samples=True)
-
+        if lang == "english":
+            by_language_valid_ids[lang] = get_valid_keys_for_language(data, language=lang,
+                                                                      write_out_filtered_samples=True)
+        else:
+            by_language_valid_ids[lang] = get_valid_keys_for_language(data, language=lang,
+                                                                      write_out_filtered_samples=False)
     validation_test_candidates = set([sample["celex_id"] for sample in data])
 
     for _, valid_language_celex_ids in by_language_valid_ids.items():
