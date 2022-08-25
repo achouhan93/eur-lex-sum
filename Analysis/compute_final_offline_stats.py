@@ -144,8 +144,6 @@ if __name__ == '__main__':
 
             # TODO: Oracle extractive baseline
 
-            # TODO: Get age distribution from celex
-
             # Count individual samples:
             for _, _ in samples.items():
                 total_count += 1
