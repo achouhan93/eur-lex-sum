@@ -327,6 +327,7 @@ if __name__ == '__main__':
     data = data["samples"]
 
     # Enable this to get a list of all considered ids in the original corpus from 1990 - today.
+    # In later stages, we did ultimately use ones beyond (including 1950s-1980s).
     if write_valid_ids:
         all_celex_ids_until_1990 = [sample["celex_id"] for sample in data]
 
@@ -370,5 +371,6 @@ if __name__ == '__main__':
 
     del data
     time.sleep(2)
+
     with open("clean_data.pkl", "wb") as f:
         pickle.dump(clean_data, f)

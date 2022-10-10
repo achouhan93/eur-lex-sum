@@ -1,5 +1,5 @@
 """
-Load the samples that are included in the submission
+Load the samples that are included in the submission. These are a reduced set to avoid code bloat.
 """
 import os
 import json
@@ -13,7 +13,6 @@ if __name__ == '__main__':
 
     for language, all_data in data.items():
         for split, samples in all_data.items():
-            # TODO: We could arguably fine-tune on this data?
             if split == "train":
                 continue
             else:

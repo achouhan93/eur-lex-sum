@@ -1,6 +1,6 @@
 """
 Confirm which of the documents that actually do have a summary (and should therefore be available)
-are actually in the crawled corpus
+are in the crawled corpus. This reveals a few documents with different properties that are excluded.
 """
 
 import requests
@@ -65,7 +65,7 @@ if __name__ == '__main__':
                 found_relevant_doc = True
 
         if not found_relevant_doc:
-            print(f"Did not find suitable candidate for document with references {reference_docs}")
+            print(f"Did not find a suitable candidate for the document with references {reference_docs}")
 
 
 

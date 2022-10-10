@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-# Set correct font size for plots
+# Set larger font size for plots
 matplotlib.rc('xtick', labelsize=18)
 matplotlib.rc('ytick', labelsize=18)
 matplotlib.rc('legend', fontsize=18)
@@ -17,7 +17,7 @@ matplotlib.rcParams['font.family'] = 'STIXGeneral'
 
 def clean_text(text: str) -> str:
     """
-    Internally converts the text to a simple paragraph estimate, and re-joins it after simple cleaning operations.
+    Internally converts the text to what we estimate to be paragraphs, and re-joins it after simple cleaning operations.
     """
 
     split_text = get_split_text(text)
@@ -62,6 +62,9 @@ def print_language_stats(language: str,
                          reference_lengths: List[int],
                          summary_lengths: List[int],
                          compression_ratios: List[float]) -> None:
+    """
+    Prints mean +/- std, median, min/max for reference length, summary length and compression ratios.
+    """
     print(f"#######################################\n"
           f"Stats for {language}:")
     print_dist(reference_lengths, "reference lengths")
@@ -77,7 +80,11 @@ def print_dist(lengths: List[Union[int, float]], description: str) -> None:
           f"Maximum length of {description}:\t{np.max(lengths):.2f}\n\n")
 
 
-def identify_document_scans(celex_ids, reference_texts, summary_texts):
+def identify_document_scans(celex_ids: List[str], reference_texts: List[str], summary_texts: List[str]):
+    """
+    PDF scans are hard (if not impossible) to align, which is why we want to filter them out.
+    Fortunately for us, there are some distinct strings in the text snippets which we can filter by.
+    """
     ref_text_scans = []
     summ_text_scans = []
     # Filter documents that are likely document scans
@@ -97,6 +104,9 @@ def identify_document_scans(celex_ids, reference_texts, summary_texts):
 
 
 def print_short_percentiles(reference_token_lengths, summary_token_lengths):
+    """
+    Quick analysis wrt the shorter end of documents.
+    """
     # Evaluate how many docs are potentially affected by "really short" documents:
     print(f"Length of shortest 5% of reference articles: {np.percentile(reference_token_lengths, 5)} tokens")
     print(f"Length of shortest 5% of *summary* articles: {np.percentile(summary_token_lengths, 5)} tokens")
@@ -106,6 +116,9 @@ def print_short_percentiles(reference_token_lengths, summary_token_lengths):
 
 
 def manual_review(celex_ids, reference_texts, reference_token_lengths):
+    """
+    Manual inspection of extremely short summaries.
+    """
     for celex_id, ref_text, ref_length in zip(celex_ids, reference_texts, reference_token_lengths):
         if ref_length < 500:
             print(celex_id)
@@ -147,12 +160,13 @@ def identify_duplicates_by_text(celex_ids, reference_texts, summary_texts,
 
 def identify_duplicates_by_equality(celex_ids, summary_texts, summary_token_lengths):
     # Figure out how many duplicate summaries we have in the corpus
-    # This is quite inefficient O(N²) comparisons of long texts.
+    # This is quite inefficient (with O(N²) comparisons), particularly for long texts.
     # There is a different number of matches if we proxy by only using the length, which is why I would not recommend.
     duplicated_summaries = set()
     for celex_id, summ_text, summ_length in tqdm(zip(celex_ids, summary_texts, summary_token_lengths)):
         for other_celex_id, other_summ_text, other_summ_length in zip(celex_ids, summary_texts, summary_token_lengths):
 
+            # SequenceMatcher is way too slow for the long docs
             # seq = SequenceMatcher(None, summ_text, other_summ_text)
             if celex_id != other_celex_id and summ_text == other_summ_text:  # seq.ratio() > 0.95:
                 # print(f"{celex_id} and {other_celex_id} have the same summary")

@@ -1,5 +1,6 @@
 """
 Compute stats such as compression ratio, lengths, n-gram novelty, etc.
+For this purpose no additional connections are required.
 """
 from typing import List, Union, Set
 from collections import Counter
@@ -54,7 +55,7 @@ def get_novel_ngrams(samples, max_ngram_length: int = 4):
     return novel_ratios
 
 
-def get_ngrams(text, n):
+def get_ngrams(text: str, n: int):
     n_grams = set()
     tokens = text.split(" ")
 
@@ -79,6 +80,36 @@ def identify_publishing_year(celex_id) -> int:
     if not 1950 < year_candidate <= 2022:
         raise ValueError(f"{celex_id} gave year {year_candidate} as candidate.")
     return year_candidate
+
+
+def plot_temporal_distribution(train_celex_ids: Set[str], validation_celex_ids: Set[str], test_celex_ids: Set[str]):
+
+    # Use the celex IDs to determine the years that are available.
+    train_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in train_celex_ids])
+    validation_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in validation_celex_ids])
+    test_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in test_celex_ids])
+
+    x_labels = [year for year in range(min(list(train_year_distribution.keys())),
+                                       max(list(train_year_distribution.keys())))]
+    train_bars = [train_year_distribution.get(year, 0) for year in x_labels]
+    validation_bars = [validation_year_distribution.get(year, 0) for year in x_labels]
+    test_bars = [test_year_distribution.get(year, 0) for year in x_labels]
+
+    print(train_year_distribution)
+    print(validation_year_distribution)
+    print(test_year_distribution)
+
+    fig, ax = plt.subplots()
+    ax.bar(x_labels, train_bars, label="train", color="#1b9e77", width=0.9)
+    ax.bar(x_labels, validation_bars, label="validation", bottom=train_bars, color="#d95f02", width=0.9)
+    ax.bar(x_labels, test_bars, label="test", bottom=np.array(train_bars) + np.array(validation_bars), color="#7570b3",
+           width=0.9)
+
+    ax.set_xlim(min(x_labels)-1, max(x_labels)+1)
+    ax.set_ylim(0, 115)
+    plt.legend()
+    plt.savefig("./Insights/year_distribution.png", dpi=400)
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -142,8 +173,6 @@ if __name__ == '__main__':
             ratio_string += "\\\\"
             print(ratio_string)
 
-            # TODO: Oracle extractive baseline
-
             # Count individual samples:
             for _, _ in samples.items():
                 total_count += 1
@@ -164,30 +193,5 @@ if __name__ == '__main__':
 
     print(f"{len(train_celex_ids)} total unique Celex samples available in the training sets.")
     print(f"Complemented by {len(validation_celex_ids)} validation and {len(test_celex_ids)} test samples")
-    # Use the celex IDs to determine the years that are available.
-    train_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in train_celex_ids])
-    validation_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in validation_celex_ids])
-    test_year_distribution = Counter([identify_publishing_year(celex_id) for celex_id in test_celex_ids])
 
-    x_labels = [year for year in range(min(list(train_year_distribution.keys())),
-                                       max(list(train_year_distribution.keys())))]
-    train_bars = [train_year_distribution.get(year, 0) for year in x_labels]
-    validation_bars = [validation_year_distribution.get(year, 0) for year in x_labels]
-    test_bars = [test_year_distribution.get(year, 0) for year in x_labels]
-
-    print(train_year_distribution)
-    print(validation_year_distribution)
-    print(test_year_distribution)
-
-    fig, ax = plt.subplots()
-    ax.bar(x_labels, train_bars, label="train", color="#1b9e77", width=0.9)
-    ax.bar(x_labels, validation_bars, label="validation", bottom=train_bars, color="#d95f02", width=0.9)
-    ax.bar(x_labels, test_bars, label="test", bottom=np.array(train_bars) + np.array(validation_bars), color="#7570b3",
-           width=0.9)
-
-    ax.set_xlim(min(x_labels)-1, max(x_labels)+1)
-    ax.set_ylim(0, 115)
-    plt.legend()
-    plt.savefig("./Insights/year_distribution.png", dpi=400)
-    plt.show()
-
+    plot_temporal_distribution(train_celex_ids, validation_celex_ids, test_celex_ids)

@@ -1,6 +1,7 @@
 """
 Script to compute the following additional statistics for the rebuttal:
-  - Distribution of Celex IDs across languages (i.e., in how many languages is the sample present)
+  - Distribution of Celex IDs across languages (i.e., in how many languages is the sample present).
+  - N-gram novelty across subsets, particularly for documents with multiple references.
 
 """
 import json
@@ -12,7 +13,6 @@ from compute_final_offline_stats import get_novel_ngrams
 
 def get_language_availability_distribution(data):
 
-    total_count = 0
     train_celex_occurrences = []
 
     # Iterate through all samples to find out how many times a particular celex id occurs across languages.
@@ -116,4 +116,5 @@ if __name__ == '__main__':
 
     get_ngram_novelty_for_subsets(data)
 
+    # Enable this to avoid pycharm or other interactive shells from crashing after execution
     del data
