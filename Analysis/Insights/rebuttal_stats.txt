@@ -30,3 +30,17 @@ Length of test set: 188
 11.96% of samples are available in less than 10 languages.
 
 -> This leaves roughly 3.89% of samples to have between 10-20 languages available.
+
+
+N-gram novelty ratios for the full English set (train + val + test combined)
+Verify length of full combined English data: 1504
+Novel n-gram ratios: & 42.25 & 64.07 & 77.34 & 83.73 \\
+N-gram novelty ratios for the single reference subset
+Verify length of single reference subset: 1349
+Novel n-gram ratios: & 41.74 & 63.52 & 76.87 & 83.33 \\
+N-gram novelty ratios for the multi reference subset with single document texts
+Verify length of multi reference subset: 155
+Novel n-gram ratios: & 46.77 & 68.83 & 81.44 & 87.18 \\
+N-gram novelty ratios for the multi reference subset with all referenced document texts concatenated
+Verify length of multi reference subset (concatenated): 155
+Novel n-gram ratios: & 41.03 & 63.06 & 76.38 & 82.77 \\
