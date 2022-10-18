@@ -1,5 +1,8 @@
 """
-Based on the (filtered) corpus of offline data, compute stats
+Based on the (filtered) corpus of offline data, compute stats;
+notably, this is a "non-sequential file", meaning some experiments are not automatically run,
+and would have to be enabled first before producing relevant outputs.
+The resulting pickle file is also available for direct download (see the README file in this folder).
 """
 
 from typing import List, Dict, Tuple
@@ -16,6 +19,10 @@ from utils import clean_text, compute_whitespace_split_length, print_language_st
 
 
 def count_total_number_instances(samples: List[Dict]):
+    """
+    Total instances in the dataset; one "instance" is a particular Celex ID in *one* specific language.
+    This means thte total number of instances is the sum over language-specific samples.
+    """
     occurrences = []
     for sample in samples:
         occurrences.extend(cleaned_keys(sample))
@@ -32,8 +39,12 @@ def cleaned_keys(sample: Dict) -> List[str]:
     return keys
 
 
-def get_lengths_and_ratios(reference_texts, summary_texts, valid_ids=None, celex_ids=None):
-
+def get_lengths_and_ratios(reference_texts, summary_texts, valid_ids=None, celex_ids=None) \
+        -> Tuple[List[int], List[int], List[float]]:
+    """
+    Computes the length statistics (reference and summary), as well as the associated compression ratios.
+    This uses a simple whitespace tokenization approach for length determination.
+    """
     if valid_ids and celex_ids:
         reference_texts = [reference_text for idx, reference_text in enumerate(reference_texts)
                            if celex_ids[idx] in valid_ids]
@@ -60,14 +71,6 @@ def filter_duplicates(celex_ids, reference_lengths, summary_texts, write_out=Fal
             by_summary_lookup[summary_text].append((celex_id, reference_lengths[idx], idx))
         else:
             by_summary_lookup[summary_text] = [(celex_id, reference_lengths[idx], idx)]
-
-        # FIXME: This is a non-critical bug that temporarily introduces multiple "other summaries" to by_summary_lookup
-        #  since it iterates over the other ids potentially multiple times, but only ever checking for the current id,
-        #  and not other ones that might be in the list already.
-        # for other_idx, (other_celex_id, other_summary_text) in enumerate(zip(celex_ids, summary_texts)):
-        #     # Check if text is the same, but a different sample
-        #     if summary_text == other_summary_text and celex_id != other_celex_id:
-        #         by_summary_lookup[summary_text].append((other_celex_id, reference_lengths[other_idx], other_idx))
 
     celex_ids_to_keep = []
 
@@ -115,14 +118,15 @@ def combine_reference_texts(reference_texts, match_objects) -> str:
 
 
 def filter_short_documents(celex_ids, reference_lengths, summary_lengths, filtered_id_set) -> List[str]:
-
+    """
+    Filter out samples where the reference text is shorter (or equal) to summaries.
+    """
     further_filtered_id_set = []
     for celex_id, reference_length, summary_length in zip(celex_ids, reference_lengths, summary_lengths):
         # Ignore samples that have previously been dropped
         if celex_id in filtered_id_set:
             if reference_length <= summary_length:
                 pass
-                # sprint(f"{celex_id} has {reference_length} reference tokens, but {summary_length} summary tokens.")
             else:
                 further_filtered_id_set.append(celex_id)
 

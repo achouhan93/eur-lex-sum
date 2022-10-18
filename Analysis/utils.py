@@ -21,21 +21,8 @@ def clean_text(text: str) -> str:
     """
 
     split_text = get_split_text(text)
-
     # Remove empty lines and the XML identifier in some first line
     split_text = [line.strip() for line in split_text if line.strip() and not line.endswith(".xml")]
-    # TODO: Merge and remove lines based on further heuristics to clean up
-    # for line in split_text:
-    #     # Check for short lines
-    #     if len(line.split(" ")) < 4:
-    #         # Skip the first line which contains a .xml file name
-    #         if line.endswith(".xml"):
-    #             continue
-    #         # If digits are present, it is likely a match with the previous line
-    #         elif regex.findall(r"[0-9]", line):
-    #             continue
-    #         # Or if we find other "item-like" characters, such as "a)" or "b)"
-    #         elif regex.match(r"[a-z])", line):
 
     text = "\n".join(split_text)
     return text
@@ -196,10 +183,6 @@ def histogram_plot(lengths: List[Union[int, float]],
     plt.axvline(np.median(lengths), color='#d95f02', linestyle='solid', linewidth=2)
 
     # Title and save
-    # plt.xlabel(f"{type_of_lengths}")
-    # plt.ylabel(f"Frequency")
-    # plt.locator_params(axis='x', nbins=8)
-    # plt.title(f"Histogram of {type_of_lengths} length for the subset of {language} articles.")
     plt.savefig(fp, dpi=300)
     plt.show()
     plt.close()

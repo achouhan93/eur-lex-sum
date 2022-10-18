@@ -2,7 +2,6 @@
 Script to compute the following additional statistics for the rebuttal:
   - Distribution of Celex IDs across languages (i.e., in how many languages is the sample present).
   - N-gram novelty across subsets, particularly for documents with multiple references.
-
 """
 import json
 import pickle
@@ -112,7 +111,7 @@ if __name__ == '__main__':
     with open("clean_data.pkl", "rb") as f:
         data = pickle.load(f)
 
-    get_language_availability_distribution(data)
+    # get_language_availability_distribution(data)
 
     get_ngram_novelty_for_subsets(data)
 

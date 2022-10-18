@@ -1,6 +1,6 @@
 """
 Compute stats such as compression ratio, lengths, n-gram novelty, etc.
-For this purpose no additional connections are required.
+This script relies entirely on the offline data.
 """
 from typing import List, Union, Set
 from collections import Counter
@@ -30,13 +30,8 @@ def compute_whitespace_token_lengths(samples, key: str) -> List[int]:
 
 
 def print_latex(lengths: List[Union[int, float]], description: str) -> None:
-    print(f"{description} & {np.mean(lengths):.0f} $\\pm$ {np.std(lengths):.0f} & "  # {np.median(lengths):.0f} & "
+    print(f"{description} & {np.mean(lengths):.0f} $\\pm$ {np.std(lengths):.0f} & "
           f"{np.min(lengths):.0f} & {np.max(lengths):.0f} ")
-    # print(f"Mean {description}:\t\t\t{np.mean(lengths):.2f} "
-    #       f"+/- {np.std(lengths):.2f}")
-    # print(f"Median {description}:\t\t{np.median(lengths):.2f}")
-    # print(f"Minimum length of {description}:\t{np.min(lengths):.2f}\n"
-    #       f"Maximum length of {description}:\t{np.max(lengths):.2f}\n\n")
 
 
 def get_novel_ngrams(samples, max_ngram_length: int = 4):
@@ -55,7 +50,7 @@ def get_novel_ngrams(samples, max_ngram_length: int = 4):
     return novel_ratios
 
 
-def get_ngrams(text: str, n: int):
+def get_ngrams(text: str, n: int) -> Set:
     n_grams = set()
     tokens = text.split(" ")
 
@@ -65,7 +60,7 @@ def get_ngrams(text: str, n: int):
     return n_grams
 
 
-def novelty_ratio(reference: Set, summary: Set):
+def novelty_ratio(reference: Set, summary: Set) -> float:
     return 1 - (len(summary.intersection(reference)) / len(summary))
 
 

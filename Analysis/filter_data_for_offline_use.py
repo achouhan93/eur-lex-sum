@@ -1,7 +1,9 @@
 """
 Script to write an offline copy of the data for faster retrieval.
-Performs preliminary filtering such that all languages are non-empty.
+Notably, this does *not* yet filter out all invalid samples.
+See `investigate_offline_data.py` for further filtering.
 """
+
 from typing import Dict
 from datetime import datetime
 import pickle
@@ -123,6 +125,7 @@ if __name__ == '__main__':
             else:
                 add_to_sample_store(doc, valid_sample_store)
 
+    # Manual intervention avoids RAM-related issues.
     input("All data samples saved, please confirm to save file.")
 
     with open("offline_data_storage.pkl", "wb") as f:

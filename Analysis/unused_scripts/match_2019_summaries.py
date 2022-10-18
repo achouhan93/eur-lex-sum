@@ -1,6 +1,8 @@
 """
 Confirm which of the documents that actually do have a summary (and should therefore be available)
 are in the crawled corpus. This reveals a few documents with different properties that are excluded.
+
+If running this, make sure to have a valid configuration file in the same folder.
 """
 
 import requests

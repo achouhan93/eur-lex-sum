@@ -1,5 +1,6 @@
 """
 Script to compute the basic length stats of the different language-specific corpora.
+This script generates the `Insights/language_distribution.png` figure.
 """
 
 from typing import List, Dict
@@ -16,6 +17,9 @@ from utils import clean_text, compute_whitespace_split_length, get_split_text, p
 
 
 def update_document_language_distribution(document: Dict, collect_occurrences: List) -> None:
+    """
+    Iterates through a document's language-specific texts, and will count how many languages have a summary available.
+    """
 
     # Iterate through the documents and count availability of languages
     for language, doc_info in document["_source"].items():
@@ -64,6 +68,11 @@ def analyze_text_lengths(document: Dict, reference_lengths: Dict, summary_length
 
 
 def compare_en_de_texts(document: Dict):
+    """
+    Compare the text of particular documents for German and English.
+    These languages were chosen given our personal language abilities, which allows us to evaluate
+    whether two documents are actually properly aligned.
+    """
 
     en_ref = ""
     en_summ = ""
@@ -129,7 +138,7 @@ if __name__ == '__main__':
         update_document_language_distribution(response, languages_with_non_empty_docs)
         analyze_text_lengths(response, reference_token_lengths, summary_token_lengths, compression_ratios)
 
-    # use the final batch to compare a sample reference and summary
+    # Enable this to use the final batch to compare a sample reference and summary
     # compare_en_de_texts(response)
 
     language_distribution = Counter(languages_with_non_empty_docs)
@@ -146,6 +155,7 @@ if __name__ == '__main__':
 
     print(f"{language_string}\n{frequency_string}")
 
+    # Plot English, German and French language distributions.
     for language in reference_token_lengths.keys():
         # For reference, ignore information on other languages for legibility
         if language not in ["german", "english", "french"]:
