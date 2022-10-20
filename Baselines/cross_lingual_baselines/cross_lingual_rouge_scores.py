@@ -1,5 +1,5 @@
 """
-Script to evaluate all different languages
+Script to evaluate the Spanish cross-lingual baselines
 """
 from typing import IO, Dict
 import os
@@ -9,6 +9,9 @@ from rouge_score.rouge_scorer import RougeScorer
 
 
 def directory_iterator(source_dir: str, target_dir: str) -> (IO, IO):
+    """
+    Utility to iterate all files in a directory.
+    """
     for fn in sorted(os.listdir(source_dir)):
         in_fp = os.path.join(source_dir, fn)
         out_fp = os.path.join(target_dir, fn)
@@ -52,10 +55,9 @@ def print_aggregate(result: Dict) -> None:
 
 
 def get_scores(language, lang, system_folder, fast=False):
-
-    language = "spanish"
-    lang = "es"
-
+    """
+    Evaluates the scores of a particular cross-lingual experiment.
+    """
     # Translation baseline
     for split in ["validation", "test"]:
         aggregator = BootstrapAggregator(confidence_interval=0.95)

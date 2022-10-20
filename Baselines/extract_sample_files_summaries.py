@@ -16,11 +16,6 @@ if __name__ == '__main__':
             if split == "train":
                 continue
             else:
-                # for method in ["paragraph", "oracle", "lexrank",
-                #                "./cross_lingual_baselines/translated"]:
-                #     if method != "paragraph" and language != "spanish":
-                #         continue
-                #     if method == ""
 
                 out_path = os.path.join("./generated_samples/", "paragraph", language, split)
                 os.makedirs(out_path, exist_ok=True)
