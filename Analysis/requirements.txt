@@ -1,0 +1,5 @@
+opensearch-py>=1.1.0
+tqdm
+matplotlib
+numpy
+pickle

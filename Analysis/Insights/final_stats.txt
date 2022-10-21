@@ -1,0 +1,374 @@
+Stats for french (train)
+reference token & 13192 $\pm$ 43950 & 357 & 1093674 
+summary token & 892 $\pm$ 395 & 174 & 3186 
+compression ratios token & 16 $\pm$ 63 & 1 & 1698 
+Novel n-gram ratios: & 45.07 & 64.13 & 77.16 & 83.81 \\
+Stats for french (validation)
+reference token & 19497 $\pm$ 22685 & 1144 & 223640 
+summary token & 1160 $\pm$ 559 & 394 & 5867 
+compression ratios token & 17 $\pm$ 17 & 2 & 135 
+Novel n-gram ratios: & 36.26 & 55.08 & 69.55 & 77.41 \\
+Stats for french (test)
+reference token & 19871 $\pm$ 34642 & 1660 & 435611 
+summary token & 1107 $\pm$ 431 & 432 & 3865 
+compression ratios token & 18 $\pm$ 19 & 2 & 194 
+Novel n-gram ratios: & 36.48 & 55.23 & 69.63 & 77.58 \\
+Stats for german (train)
+reference token & 11144 $\pm$ 41061 & 353 & 1080483 
+summary token & 748 $\pm$ 330 & 155 & 2783 
+compression ratios token & 16 $\pm$ 68 & 1 & 1909 
+Novel n-gram ratios: & 44.85 & 66.95 & 79.12 & 84.53 \\
+Stats for german (validation)
+reference token & 16133 $\pm$ 18248 & 1044 & 176743 
+summary token & 975 $\pm$ 470 & 350 & 4943 
+compression ratios token & 17 $\pm$ 16 & 2 & 133 
+Novel n-gram ratios: & 36.55 & 58.44 & 72.20 & 78.62 \\
+Stats for german (test)
+reference token & 16470 $\pm$ 28759 & 1336 & 362320 
+summary token & 926 $\pm$ 354 & 351 & 3153 
+compression ratios token & 17 $\pm$ 19 & 2 & 191 
+Novel n-gram ratios: & 36.48 & 58.19 & 71.96 & 78.46 \\
+Stats for english (train)
+reference token & 12206 $\pm$ 42429 & 385 & 1087217 
+summary token & 799 $\pm$ 349 & 173 & 3021 
+compression ratios token & 16 $\pm$ 62 & 1 & 1668 
+ref length max: 1087217
+summ length max: 3021
+ref length min: 385
+summ length min: 173
+compression ratio max: 1667.510736196319
+ref length 95: 38623.19999999992
+summ length 95: 1470.3999999999992
+compression ratio 95: 43.70285851447611
+Novel n-gram ratios: & 44.10 & 65.97 & 78.85 & 84.96 \\
+Stats for english (validation)
+reference token & 17740 $\pm$ 20243 & 1143 & 199405 
+summary token & 1031 $\pm$ 482 & 354 & 5136 
+compression ratios token & 18 $\pm$ 17 & 2 & 138 
+Novel n-gram ratios: & 36.65 & 58.23 & 72.74 & 79.96 \\
+Stats for english (test)
+reference token & 18075 $\pm$ 31910 & 1544 & 403319 
+summary token & 972 $\pm$ 360 & 369 & 2987 
+compression ratios token & 18 $\pm$ 20 & 2 & 200 
+Novel n-gram ratios: & 36.78 & 58.46 & 72.83 & 80.07 \\
+Stats for spanish (train)
+reference token & 13581 $\pm$ 44574 & 471 & 1096028 
+summary token & 932 $\pm$ 420 & 187 & 3567 
+compression ratios token & 15 $\pm$ 57 & 1 & 1485 
+Novel n-gram ratios: & 44.76 & 61.51 & 74.65 & 81.92 \\
+Stats for spanish (validation)
+reference token & 20366 $\pm$ 23919 & 1244 & 237638 
+summary token & 1221 $\pm$ 610 & 413 & 6492 
+compression ratios token & 17 $\pm$ 17 & 2 & 137 
+Novel n-gram ratios: & 35.83 & 52.18 & 65.95 & 74.44 \\
+Stats for spanish (test)
+reference token & 20682 $\pm$ 36226 & 1755 & 456649 
+summary token & 1160 $\pm$ 446 & 447 & 3800 
+compression ratios token & 17 $\pm$ 19 & 2 & 186 
+Novel n-gram ratios: & 35.50 & 52.09 & 65.99 & 74.60 \\
+Stats for italian (train)
+reference token & 13152 $\pm$ 44641 & 413 & 1089321 
+summary token & 845 $\pm$ 370 & 217 & 2940 
+compression ratios token & 16 $\pm$ 67 & 1 & 1721 
+Novel n-gram ratios: & 44.77 & 67.00 & 79.80 & 85.59 \\
+Stats for italian (validation)
+reference token & 18237 $\pm$ 21548 & 1072 & 214992 
+summary token & 1088 $\pm$ 532 & 372 & 5590 
+compression ratios token & 17 $\pm$ 17 & 2 & 136 
+Novel n-gram ratios: & 35.79 & 57.15 & 71.62 & 78.80 \\
+Stats for italian (test)
+reference token & 18398 $\pm$ 32403 & 1545 & 408770 
+summary token & 1039 $\pm$ 401 & 393 & 3457 
+compression ratios token & 17 $\pm$ 19 & 2 & 185 
+Novel n-gram ratios: & 35.90 & 57.32 & 71.77 & 78.90 \\
+Stats for portuguese (train)
+reference token & 12629 $\pm$ 29921 & 649 & 476133 
+summary token & 896 $\pm$ 391 & 284 & 3372 
+compression ratios token & 14 $\pm$ 38 & 1 & 646 
+Novel n-gram ratios: & 43.84 & 64.00 & 77.50 & 83.92 \\
+Stats for portuguese (validation)
+reference token & 18960 $\pm$ 22404 & 1142 & 224910 
+summary token & 1143 $\pm$ 556 & 383 & 5825 
+compression ratios token & 17 $\pm$ 17 & 2 & 131 
+Novel n-gram ratios: & 33.98 & 52.80 & 67.60 & 75.44 \\
+Stats for portuguese (test)
+reference token & 19196 $\pm$ 33620 & 1571 & 423405 
+summary token & 1090 $\pm$ 427 & 435 & 3841 
+compression ratios token & 17 $\pm$ 19 & 2 & 181 
+Novel n-gram ratios: & 33.95 & 52.81 & 67.55 & 75.38 \\
+Stats for greek (train)
+reference token & 13609 $\pm$ 45411 & 688 & 1089845 
+summary token & 863 $\pm$ 369 & 270 & 3095 
+compression ratios token & 17 $\pm$ 64 & 1 & 1624 
+Novel n-gram ratios: & 44.86 & 66.70 & 80.09 & 86.18 \\
+Stats for greek (validation)
+reference token & 18389 $\pm$ 21267 & 1101 & 210425 
+summary token & 1096 $\pm$ 525 & 381 & 5482 
+compression ratios token & 17 $\pm$ 17 & 2 & 134 
+Novel n-gram ratios: & 35.85 & 57.49 & 72.05 & 79.54 \\
+Stats for greek (test)
+reference token & 18748 $\pm$ 32844 & 1610 & 414252 
+summary token & 1045 $\pm$ 403 & 380 & 3545 
+compression ratios token & 17 $\pm$ 19 & 2 & 196 
+Novel n-gram ratios: & 36.12 & 57.53 & 72.36 & 79.84 \\
+Stats for dutch (train)
+reference token & 13233 $\pm$ 44638 & 633 & 1088269 
+summary token & 834 $\pm$ 362 & 294 & 2976 
+compression ratios token & 17 $\pm$ 69 & 1 & 1799 
+Novel n-gram ratios: & 44.41 & 65.86 & 78.58 & 84.75 \\
+Stats for dutch (validation)
+reference token & 17991 $\pm$ 20863 & 1152 & 207458 
+summary token & 1058 $\pm$ 504 & 367 & 5259 
+compression ratios token & 17 $\pm$ 17 & 2 & 143 
+Novel n-gram ratios: & 35.44 & 55.99 & 70.11 & 77.49 \\
+Stats for dutch (test)
+reference token & 18312 $\pm$ 32368 & 1509 & 409422 
+summary token & 1005 $\pm$ 386 & 387 & 3406 
+compression ratios token & 18 $\pm$ 20 & 2 & 205 
+Novel n-gram ratios: & 35.51 & 56.67 & 70.74 & 78.06 \\
+Stats for danish (train)
+reference token & 11947 $\pm$ 43155 & 417 & 1081725 
+summary token & 717 $\pm$ 308 & 211 & 2405 
+compression ratios token & 18 $\pm$ 71 & 1 & 1843 
+Novel n-gram ratios: & 46.96 & 68.27 & 80.68 & 86.13 \\
+Stats for danish (validation)
+reference token & 15882 $\pm$ 18385 & 967 & 181335 
+summary token & 910 $\pm$ 433 & 316 & 4379 
+compression ratios token & 18 $\pm$ 17 & 2 & 142 
+Novel n-gram ratios: & 36.57 & 57.69 & 71.60 & 78.24 \\
+Stats for danish (test)
+reference token & 16119 $\pm$ 28761 & 1424 & 363705 
+summary token & 856 $\pm$ 332 & 328 & 2904 
+compression ratios token & 18 $\pm$ 21 & 2 & 206 
+Novel n-gram ratios: & 37.15 & 58.47 & 72.40 & 78.95 \\
+Stats for finnish (train)
+reference token & 9792 $\pm$ 41021 & 435 & 1068163 
+summary token & 575 $\pm$ 247 & 181 & 2000 
+compression ratios token & 18 $\pm$ 93 & 1 & 2593 
+Novel n-gram ratios: & 53.41 & 77.26 & 85.65 & 89.54 \\
+Stats for finnish (validation)
+reference token & 12446 $\pm$ 14542 & 788 & 144481 
+summary token & 738 $\pm$ 364 & 285 & 3881 
+compression ratios token & 17 $\pm$ 17 & 2 & 139 
+Novel n-gram ratios: & 43.13 & 68.48 & 78.41 & 83.20 \\
+Stats for finnish (test)
+reference token & 12597 $\pm$ 22253 & 1067 & 281553 
+summary token & 695 $\pm$ 269 & 249 & 2373 
+compression ratios token & 18 $\pm$ 20 & 2 & 202 
+Novel n-gram ratios: & 43.34 & 68.78 & 78.62 & 83.17 \\
+Stats for swedish (train)
+reference token & 10796 $\pm$ 26923 & 607 & 440169 
+summary token & 718 $\pm$ 305 & 259 & 2428 
+compression ratios token & 15 $\pm$ 40 & 1 & 635 
+Novel n-gram ratios: & 46.74 & 69.62 & 81.97 & 87.33 \\
+Stats for swedish (validation)
+reference token & 15739 $\pm$ 18157 & 977 & 176379 
+summary token & 912 $\pm$ 432 & 322 & 4468 
+compression ratios token & 18 $\pm$ 17 & 2 & 132 
+Novel n-gram ratios: & 37.39 & 59.60 & 73.62 & 80.33 \\
+Stats for swedish (test)
+reference token & 16002 $\pm$ 28572 & 1392 & 361228 
+summary token & 859 $\pm$ 331 & 322 & 2972 
+compression ratios token & 18 $\pm$ 21 & 2 & 215 
+Novel n-gram ratios: & 37.82 & 60.35 & 74.29 & 80.73 \\
+Stats for romanian (train)
+reference token & 13646 $\pm$ 45644 & 508 & 1087370 
+summary token & 826 $\pm$ 356 & 300 & 2692 
+compression ratios token & 17 $\pm$ 67 & 1 & 1694 
+Novel n-gram ratios: & 45.42 & 67.80 & 80.33 & 86.11 \\
+Stats for romanian (validation)
+reference token & 18314 $\pm$ 21514 & 1074 & 213262 
+summary token & 1057 $\pm$ 521 & 356 & 5462 
+compression ratios token & 18 $\pm$ 18 & 2 & 134 
+Novel n-gram ratios: & 35.75 & 58.23 & 72.50 & 79.53 \\
+Stats for romanian (test)
+reference token & 18565 $\pm$ 32975 & 1517 & 415792 
+summary token & 1005 $\pm$ 389 & 397 & 3410 
+compression ratios token & 18 $\pm$ 20 & 2 & 196 
+Novel n-gram ratios: & 35.52 & 58.16 & 72.18 & 79.09 \\
+Stats for czech (train)
+reference token & 12469 $\pm$ 46640 & 550 & 1076477 
+summary token & 715 $\pm$ 307 & 286 & 2457 
+compression ratios token & 18 $\pm$ 77 & 1 & 1954 
+Novel n-gram ratios: & 46.75 & 71.89 & 82.37 & 87.23 \\
+Stats for czech (validation)
+reference token & 15294 $\pm$ 17743 & 916 & 173741 
+summary token & 907 $\pm$ 454 & 304 & 4861 
+compression ratios token & 17 $\pm$ 17 & 2 & 134 
+Novel n-gram ratios: & 36.85 & 62.64 & 74.73 & 80.56 \\
+Stats for czech (test)
+reference token & 15562 $\pm$ 27348 & 1286 & 344673 
+summary token & 867 $\pm$ 334 & 364 & 2937 
+compression ratios token & 17 $\pm$ 19 & 2 & 192 
+Novel n-gram ratios: & 36.86 & 62.72 & 74.81 & 80.63 \\
+Stats for polish (train)
+reference token & 11560 $\pm$ 33296 & 418 & 579099 
+summary token & 739 $\pm$ 324 & 281 & 2602 
+compression ratios token & 16 $\pm$ 48 & 1 & 740 
+Novel n-gram ratios: & 46.69 & 71.01 & 81.52 & 86.52 \\
+Stats for polish (validation)
+reference token & 15884 $\pm$ 18754 & 967 & 185368 
+summary token & 944 $\pm$ 461 & 316 & 4776 
+compression ratios token & 17 $\pm$ 17 & 2 & 138 
+Novel n-gram ratios: & 36.88 & 60.88 & 72.71 & 78.92 \\
+Stats for polish (test)
+reference token & 16097 $\pm$ 28554 & 1365 & 360573 
+summary token & 898 $\pm$ 354 & 324 & 3124 
+compression ratios token & 17 $\pm$ 19 & 2 & 188 
+Novel n-gram ratios: & 36.60 & 61.20 & 73.24 & 79.41 \\
+Stats for lithuanian (train)
+reference token & 11943 $\pm$ 46673 & 510 & 1074907 
+summary token & 669 $\pm$ 290 & 252 & 2333 
+compression ratios token & 19 $\pm$ 88 & 1 & 2253 
+Novel n-gram ratios: & 47.79 & 74.00 & 83.38 & 87.79 \\
+Stats for lithuanian (validation)
+reference token & 14236 $\pm$ 16669 & 865 & 163878 
+summary token & 868 $\pm$ 427 & 279 & 4467 
+compression ratios token & 17 $\pm$ 17 & 2 & 126 
+Novel n-gram ratios: & 37.11 & 63.42 & 74.25 & 79.76 \\
+Stats for lithuanian (test)
+reference token & 14410 $\pm$ 25426 & 1203 & 321349 
+summary token & 820 $\pm$ 315 & 321 & 2735 
+compression ratios token & 17 $\pm$ 19 & 2 & 197 
+Novel n-gram ratios: & 37.35 & 63.77 & 74.59 & 79.94 \\
+Stats for slovenian (train)
+reference token & 11357 $\pm$ 32842 & 570 & 580472 
+summary token & 712 $\pm$ 305 & 277 & 2442 
+compression ratios token & 16 $\pm$ 48 & 1 & 764 
+Novel n-gram ratios: & 47.28 & 71.57 & 82.76 & 87.78 \\
+Stats for slovenian (validation)
+reference token & 15297 $\pm$ 17707 & 907 & 170778 
+summary token & 906 $\pm$ 438 & 311 & 4536 
+compression ratios token & 17 $\pm$ 17 & 2 & 131 
+Novel n-gram ratios: & 38.23 & 62.49 & 75.28 & 81.53 \\
+Stats for slovenian (test)
+reference token & 15472 $\pm$ 27519 & 1263 & 348304 
+summary token & 860 $\pm$ 330 & 345 & 2902 
+compression ratios token & 17 $\pm$ 19 & 2 & 190 
+Novel n-gram ratios: & 37.98 & 62.64 & 75.55 & 81.65 \\
+Stats for latvian (train)
+reference token & 11841 $\pm$ 46552 & 562 & 1072728 
+summary token & 670 $\pm$ 289 & 244 & 2342 
+compression ratios token & 19 $\pm$ 83 & 1 & 2108 
+Novel n-gram ratios: & 50.23 & 74.55 & 84.46 & 88.68 \\
+Stats for latvian (validation)
+reference token & 14077 $\pm$ 16742 & 875 & 167314 
+summary token & 854 $\pm$ 420 & 308 & 4454 
+compression ratios token & 17 $\pm$ 16 & 2 & 131 
+Novel n-gram ratios: & 39.84 & 64.84 & 76.26 & 81.60 \\
+Stats for latvian (test)
+reference token & 14275 $\pm$ 25404 & 1177 & 321811 
+summary token & 812 $\pm$ 308 & 320 & 2701 
+compression ratios token & 17 $\pm$ 19 & 2 & 195 
+Novel n-gram ratios: & 40.05 & 65.02 & 76.30 & 81.45 \\
+Stats for bulgarian (train)
+reference token & 13397 $\pm$ 45578 & 573 & 1088303 
+summary token & 819 $\pm$ 350 & 303 & 2828 
+compression ratios token & 17 $\pm$ 69 & 1 & 1755 
+Novel n-gram ratios: & 47.00 & 68.44 & 81.62 & 87.72 \\
+Stats for bulgarian (validation)
+reference token & 17547 $\pm$ 20036 & 1056 & 193346 
+summary token & 1045 $\pm$ 516 & 345 & 5477 
+compression ratios token & 17 $\pm$ 17 & 2 & 129 
+Novel n-gram ratios: & 37.38 & 58.58 & 73.70 & 81.32 \\
+Stats for bulgarian (test)
+reference token & 17875 $\pm$ 31381 & 1422 & 396100 
+summary token & 994 $\pm$ 376 & 361 & 3174 
+compression ratios token & 17 $\pm$ 19 & 2 & 194 
+Novel n-gram ratios: & 37.11 & 58.56 & 73.76 & 81.36 \\
+Stats for estonian (train)
+reference token & 10778 $\pm$ 45157 & 435 & 1068151 
+summary token & 581 $\pm$ 249 & 200 & 2053 
+compression ratios token & 20 $\pm$ 94 & 1 & 2439 
+Novel n-gram ratios: & 52.20 & 77.46 & 85.92 & 89.79 \\
+Stats for estonian (validation)
+reference token & 12582 $\pm$ 15275 & 777 & 157154 
+summary token & 742 $\pm$ 366 & 251 & 3867 
+compression ratios token & 17 $\pm$ 17 & 2 & 154 
+Novel n-gram ratios: & 40.78 & 67.08 & 77.26 & 82.28 \\
+Stats for estonian (test)
+reference token & 12727 $\pm$ 22468 & 1045 & 283570 
+summary token & 703 $\pm$ 270 & 280 & 2399 
+compression ratios token & 18 $\pm$ 20 & 2 & 209 
+Novel n-gram ratios: & 41.36 & 67.62 & 77.61 & 82.41 \\
+Stats for hungarian (train)
+reference token & 12230 $\pm$ 46764 & 544 & 1075651 
+summary token & 702 $\pm$ 298 & 234 & 2413 
+compression ratios token & 19 $\pm$ 84 & 1 & 2169 
+Novel n-gram ratios: & 53.23 & 75.68 & 85.64 & 89.83 \\
+Stats for hungarian (validation)
+reference token & 15045 $\pm$ 17492 & 876 & 172769 
+summary token & 899 $\pm$ 430 & 341 & 4511 
+compression ratios token & 17 $\pm$ 16 & 2 & 135 
+Novel n-gram ratios: & 42.80 & 65.72 & 77.37 & 82.85 \\
+Stats for hungarian (test)
+reference token & 15380 $\pm$ 26939 & 1178 & 338206 
+summary token & 855 $\pm$ 333 & 341 & 2915 
+compression ratios token & 17 $\pm$ 19 & 2 & 186 
+Novel n-gram ratios: & 43.08 & 66.20 & 77.70 & 83.07 \\
+Stats for slovak (train)
+reference token & 11600 $\pm$ 32968 & 611 & 574597 
+summary token & 729 $\pm$ 319 & 266 & 2551 
+compression ratios token & 16 $\pm$ 47 & 1 & 727 
+Novel n-gram ratios: & 48.20 & 73.42 & 84.08 & 88.66 \\
+Stats for slovak (validation)
+reference token & 15512 $\pm$ 18000 & 940 & 176626 
+summary token & 929 $\pm$ 467 & 313 & 5027 
+compression ratios token & 17 $\pm$ 17 & 2 & 134 
+Novel n-gram ratios: & 38.03 & 63.42 & 75.65 & 81.45 \\
+Stats for slovak (test)
+reference token & 15771 $\pm$ 28033 & 1261 & 354584 
+summary token & 885 $\pm$ 343 & 361 & 2942 
+compression ratios token & 17 $\pm$ 19 & 2 & 184 
+Novel n-gram ratios: & 37.33 & 63.01 & 75.34 & 81.16 \\
+Stats for maltese (train)
+reference token & 12711 $\pm$ 48156 & 551 & 1077694 
+summary token & 685 $\pm$ 299 & 257 & 2321 
+compression ratios token & 20 $\pm$ 85 & 1 & 2126 
+Novel n-gram ratios: & 54.77 & 81.43 & 90.87 & 94.23 \\
+Stats for maltese (validation)
+reference token & 14969 $\pm$ 17392 & 900 & 169112 
+summary token & 866 $\pm$ 418 & 320 & 4416 
+compression ratios token & 18 $\pm$ 17 & 2 & 131 
+Novel n-gram ratios: & 43.10 & 71.36 & 83.65 & 88.61 \\
+Stats for maltese (test)
+reference token & 15169 $\pm$ 26794 & 1304 & 339104 
+summary token & 825 $\pm$ 315 & 326 & 2820 
+compression ratios token & 18 $\pm$ 19 & 2 & 193 
+Novel n-gram ratios: & 43.51 & 72.25 & 84.19 & 88.90 \\
+Stats for croatian (train)
+reference token & 10051 $\pm$ 19390 & 491 & 223003 
+summary token & 712 $\pm$ 307 & 276 & 2471 
+compression ratios token & 14 $\pm$ 28 & 1 & 507 
+Novel n-gram ratios: & 48.62 & 72.61 & 83.47 & 88.11 \\
+Stats for croatian (validation)
+reference token & 15658 $\pm$ 18298 & 919 & 179604 
+summary token & 909 $\pm$ 442 & 317 & 4557 
+compression ratios token & 18 $\pm$ 17 & 2 & 139 
+Novel n-gram ratios: & 38.71 & 62.87 & 75.26 & 81.10 \\
+Stats for croatian (test)
+reference token & 15817 $\pm$ 28035 & 1269 & 354613 
+summary token & 861 $\pm$ 329 & 369 & 2822 
+compression ratios token & 18 $\pm$ 20 & 2 & 191 
+Novel n-gram ratios: & 39.01 & 63.55 & 76.01 & 81.72 \\
+Stats for irish (train)
+reference token & 28152 $\pm$ 63360 & 755 & 269841 
+summary token & 948 $\pm$ 385 & 469 & 1843 
+compression ratios token & 46 $\pm$ 137 & 1 & 575 
+Novel n-gram ratios: & 45.89 & 70.38 & 84.30 & 90.26 \\
+Stats for irish (validation)
+reference token & 19754 $\pm$ 22540 & 1223 & 218571 
+summary token & 1119 $\pm$ 531 & 406 & 5571 
+compression ratios token & 18 $\pm$ 17 & 2 & 138 
+Novel n-gram ratios: & 37.95 & 62.62 & 78.69 & 86.47 \\
+Stats for irish (test)
+reference token & 20134 $\pm$ 34917 & 1747 & 438573 
+summary token & 1065 $\pm$ 401 & 440 & 3537 
+compression ratios token & 18 $\pm$ 20 & 2 & 203 
+Novel n-gram ratios: & 37.65 & 62.58 & 78.70 & 86.41 \\
+31989 individual samples found in the corpus.
+1189 total unique Celex samples available in the training sets.
+Complemented by 187 validation and 188 test samples
+Counter({2014: 86, 2009: 81, 2008: 75, 2006: 63, 2004: 57, 2013: 52, 2002: 52, 2010: 52, 2003: 49, 2001: 45, 2011: 44, 1998: 43, 2012: 39, 2007: 37, 2019: 35, 2016: 33, 2000: 32, 2005: 30, 2015: 29, 1999: 26, 2017: 26, 1996: 23, 1997: 18, 1992: 17, 1993: 17, 2020: 16, 2018: 12, 1989: 11, 1994: 11, 1995: 10, 1991: 8, 1986: 8, 1990: 7, 1987: 7, 2021: 4, 1979: 4, 1985: 4, 1988: 3, 1976: 3, 1983: 3, 1984: 3, 1980: 2, 1982: 2, 1978: 2, 1972: 1, 1970: 1, 1960: 1, 1981: 1, 1975: 1, 1965: 1, 1971: 1, 1958: 1})
+Counter({2019: 40, 2021: 34, 2014: 15, 2013: 13, 2009: 11, 2020: 11, 2015: 9, 2017: 9, 2012: 9, 2011: 7, 2018: 7, 2008: 6, 2016: 6, 2010: 5, 2007: 4, 2022: 1})
+Counter({2021: 30, 2019: 24, 2013: 18, 2018: 15, 2009: 14, 2020: 13, 2014: 13, 2016: 11, 2012: 11, 2008: 10, 2017: 8, 2011: 8, 2007: 5, 2010: 4, 2015: 2, 2006: 1, 2022: 1})
