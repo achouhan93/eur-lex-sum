@@ -280,15 +280,17 @@ def get_file_by_id(lang: str, celex_id: str) -> Dict:
 # In[7]:
 
 
-def get_document_information(es, index_name, celex_list):
+def get_document_information(es: opensearchpy.client, index_name: str, celex_list: List[str]):
     """
     Orchestrator function to extract the summary and document content for the provided Celex Number
 
     Args:
+        es (client): An OpenSearch or ElasticSearch client
+        index_name (string): Name of the index
         celex_list (list): List of Celex number for which the summary and contents needs to be extracted
 
     Returns:
-        list: Comprising of dictionary of information about the summary and document 
+        List containing dictionaries of information about the summary and document
                 content for the provided Celex Numbers in the different languages
     """
     langs = ['BG', 'ES', 'CS', 'DA', 'DE', 'ET', 'EL', 'EN', 'FR',
@@ -296,10 +298,11 @@ def get_document_information(es, index_name, celex_list):
              'NL', 'PL', 'PT', 'RO', 'SK', 'SL', 'FI', 'SV']
     logging.info("Execution of Extraction of Summary for respective Celex Document - Started")
 
-    # For Each CELEX_Number preparing the URL and extracting Info from Website
+    # For Each Celex ID prepare the URL and extract information from the EUR-Lex website
     for celex_id in tqdm(celex_list):
-        celex_document_information = {}
-        celex_document_information['_id'] = celex_id
+        celex_document_information = {
+            '_id': celex_id
+        }
 
         for lang in langs:
             language_document_information = {}
