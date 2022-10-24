@@ -20,20 +20,19 @@
 # Importing Libraries
 import os
 import re
-import pandas as pd
+import urllib.request
+import requests
 from time import sleep, time
 
 import logging
 
 # Libraries to deal with Web Scrapping
-import urllib.request
-import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 # For Uni Heidelberg Server
 from opensearchpy import OpenSearch
 from tqdm import tqdm
-
 import PyPDF2
 
 # ### Celex Number Extraction
