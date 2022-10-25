@@ -23,9 +23,9 @@ If you use the dataset or otherwise use part of our work, please use the followi
 author = {Aumiller, Dennis and Chouhan, Ashish and Gertz, Michael},
 title = {{EUR-Lex-Sum: A Multi- and Cross-lingual Dataset for Long-form Summarization in the Legal Domain}},
 journal = {CoRR},
-volume = {TBD},
+volume = {abs/2210.13448},
 eprinttype = {arXiv},
-eprint = {TBD},
-url = {TBD}
+eprint = {2210.13448},
+url = {https://arxiv.org/abs/2210.13448}
 }
 ```
