@@ -29,7 +29,7 @@ index_name = 'eur-lex-multilingual'
 # OpenSearch Connection Setting
 user_name = os.environ.get('UNI_USER')
 password = os.environ.get('UNI_PWD')
-es = OpenSearch(hosts = [{'host': 'elastic-dbs.ifi.uni-heidelberg.de', 'port': 443}], 
+es = OpenSearch(hosts = [{'host': 'Your Elastic Search Address', 'port': 443}], 
                 http_auth =(user_name, password), 
                 use_ssl = True,
                 verify_certs = True,
