@@ -1,17 +1,16 @@
 from extractors.libraries import *
 
 def get_file_by_id(lang, celex_id):
-    # """"""""""
-    # Functionality: Extract the content present in the Celex document
-    #
-    # Signature of the function:
-    #  Input: 
-    #       lang: List of Celex document content language
-    #       celex_id: Celex Number whose content needs to be extracted
-    # 
-    #  Output:
-    #       dict: Content of the document from HTML or PDF document
-    # """""""""" 
+    """
+    Extract the content present in the Celex document
+
+    Args:
+        lang (list): List of Celex document content language
+        celex_id (string): Celex ID whose content needs to be extracted
+    
+    Returns:
+        dictionary: Content of the document from HTML or PDF document
+    """
 
     # Dictonary to save info for each iteration
     dict = {}
