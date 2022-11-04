@@ -35,7 +35,7 @@ python3 eurlex_sum_extraction_main.py
 #### ```eurlex_sum_extraction_main.py```
 The script is the primary driver for scrapping the information from the eur-lex website and storing it in the elastic search index. The first task performed by the script is to check if the elastic search has an index by the name ```eur-lex-multilingual```. If the index is not present, then the script will create the index using the index mappings from function ```elastic_search_mapping``` present in ```extractors/database/database_mapping.py```. Once the index is created, the driver script will start scrapping the eur-lex website.
 
-The eur-lex website for legislative documents comprises ```20``` domains, and each domain has documents published in different years from ```1951 till date and still going``. Thus, the second task of the script is to create the URL for a specific domain and year used for the sequential scrapping of documents and their respective summaries. 
+The eur-lex website for legislative documents comprises ```20``` domains, and each domain has documents published in different years from `1951 till date and still going`. Thus, the second task of the script is to create the URL for a specific domain and year used for the sequential scrapping of documents and their respective summaries. 
 
 For Example:
 1. From Legal Acts: https://eur-lex.europa.eu/browse/directories/legislation.html
