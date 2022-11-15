@@ -53,3 +53,6 @@ eprint = {2210.13448},
 url = {https://arxiv.org/abs/2210.13448}
 }
 ```
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
