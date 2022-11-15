@@ -54,5 +54,8 @@ url = {https://arxiv.org/abs/2210.13448}
 }
 ```
 
-## License
+## License Information
+Copyright for the editorial content of EUR-Lex website, the summaries of EU legislation and the consolidated texts owned by the EU, is licensed under the [Creative Commons Attribution 4.0 International licence](https://creativecommons.org/licenses/by/4.0/), i.e., CC BY 4.0 as mentioned on the official [EUR-Lex website](https://eur-lex.europa.eu/content/legal-notice/legal-notice.html#2.%20droits). Per recommendation of the Creative Commons, we apply a separate license to the software component of this repository. Data will be re-distributed under the CC BY 4.0 license.
+
+## License for software component
 [MIT](https://choosealicense.com/licenses/mit/)
