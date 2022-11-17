@@ -6,7 +6,7 @@ from extractors import *
 # For logging the progress of the script and the list of Celex Numbers extracted
 #####################################################################################################
 working_dir = os.getcwd()   
-directory = os.path.join(working_dir, 'Scrapped_Data_Information')
+directory = os.path.join(working_dir, 'Scraped_Data_Information')
 
 if not os.path.exists(directory):
     os.makedirs(directory)

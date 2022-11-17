@@ -6,7 +6,7 @@ from time import sleep, time
 
 import logging
 
-# Libraries to deal with Web Scrapping
+# Libraries to deal with Web Scraping
 import urllib.request
 import requests
 from bs4 import BeautifulSoup

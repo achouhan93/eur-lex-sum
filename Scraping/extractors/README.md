@@ -19,4 +19,4 @@ The script is the primary driver for gathering the document and summary content 
 The task of this script is to provide a list of celex IDs in the URL by tackling the pagination on the web page. At a given point in time, the web page only displays a `10` document. Suppose a URL has `80` documents; then `8` pages will be present, having `10` documents on each page. Thus, the script will browse over all the pages and extract the celex id present on those pages.
 
 #### `libraries.py`
-The script comprises all the import statements of the libraries required to execute the scrapper.
+The script comprises all the import statements of the libraries required to execute the scraper.

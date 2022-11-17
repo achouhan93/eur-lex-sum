@@ -21,7 +21,7 @@ def get_celex(pages, provided_url):
         sleep(1)
         url = urllib.request.urlopen(provided_url + '&page=' +str(i), timeout=10).read()
 
-        # Scrapping the Page using the BeautifulSoup Library
+        # Scraping the Page using the BeautifulSoup Library
         soup = BeautifulSoup(url , 'lxml')
 
         # Fetching celex numbers by parsing html tags heirarchy and checking for text 'CELEX number' 
