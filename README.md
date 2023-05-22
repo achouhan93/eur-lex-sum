@@ -48,15 +48,20 @@ For a comparison of language-specific stats, please refer to Table 5 in our [pre
 If you use the dataset or other parts of this code base, please use the following citation for attribution:
 
 ```
-@article{aumiller-etal-2022-eur,
-author = {Aumiller, Dennis and Chouhan, Ashish and Gertz, Michael},
-title = {{EUR-Lex-Sum: A Multi- and Cross-lingual Dataset for Long-form Summarization in the Legal Domain}},
-journal = {CoRR},
-volume = {abs/2210.13448},
-eprinttype = {arXiv},
-eprint = {2210.13448},
-url = {https://arxiv.org/abs/2210.13448}
+@inproceedings{aumiller-etal-2022-eur,
+    title = "{EUR}-Lex-Sum: A Multi- and Cross-lingual Dataset for Long-form Summarization in the Legal Domain",
+    author = "Aumiller, Dennis  and
+      Chouhan, Ashish  and
+      Gertz, Michael",
+    booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing",
+    month = dec,
+    year = "2022",
+    address = "Abu Dhabi, United Arab Emirates",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.emnlp-main.519",
+    pages = "7626--7639"
 }
+
 ```
 
 ## License Information
